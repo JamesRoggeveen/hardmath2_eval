@@ -1,15 +1,32 @@
-from openai import OpenAI
-import google.generativeai as genai
 import os
 import asyncio
+from typing import Tuple
+import time
+from typing import List
+
+from openai import AsyncOpenAI
+from google import genai
+from tqdm import tqdm
+
+from dotenv import load_dotenv
+# Load keys from a .env file in your project root
+load_dotenv()
 
 
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-if not GEMINI_API_KEY:
-    raise ValueError("Gemini API key not found in environment variables")
-if not OPENAI_API_KEY:
-    raise ValueError("OpenAI API key not found in environment variables")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+if not GEMINI_API_KEY or not OPENAI_API_KEY:
+    raise RuntimeError("Missing GEMINI_API_KEY or OPENAI_API_KEY")
+
+# OpenAI async client (httpx under the hood)
+openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)  # :contentReference[oaicite:0]{index=0}
+
+# Gemini new SDK client with async support
+genai_client = genai.Client(api_key=GEMINI_API_KEY)
+
+# Semaphores to limit the number of concurrent requests
+openai_sem = asyncio.Semaphore(5)
+gemini_sem = asyncio.Semaphore(5)
 
 # Define supported models
 SUPPORTED_MODELS_GEMINI = {
@@ -30,35 +47,75 @@ SUPPORTED_MODELS_OPENAI = {
 # Combine the dictionaries using the | operator (Python 3.9+) or dict.update()
 SUPPORTED_MODELS = {**SUPPORTED_MODELS_GEMINI, **SUPPORTED_MODELS_OPENAI}
 
-def query_llm(input_string: str, model_name: str) -> Tuple[str, bool]:
-    """Query an LLM with the given input string."""
-    if model_name in SUPPORTED_MODELS_OPENAI:
-        return query_openai(input_string, model_name)
-    elif model_name in SUPPORTED_MODELS_GEMINI:
-        return query_gemini(input_string, model_name)
-    else:
-        return f"Unsupported model: {model_name}. Supported models: {', '.join(SUPPORTED_MODELS.keys())}", True
-
-def query_openai(input_string: str, model_name: str) -> Tuple[str, bool]:
+async def query_openai_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+    """Non-blocking OpenAI chat completion."""
     model_id = SUPPORTED_MODELS_OPENAI[model_name]
-    
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
-        response = client.chat.completions.create(
+        response = await openai_client.chat.completions.create(
             model=model_id,
-            messages=[{"role": "user", "content": input_string}]
+            messages=[{"role": "user", "content": prompt}],
         )
-        return response.choices[0].message.content, False
+        return response.choices[0].message.content, idx, model_name, False
     except Exception as e:
-        return f"Error querying {model_name}: {str(e)}", True
+        return f"Error querying {model_name}: {e}", idx, model_name, True
 
-def query_gemini(input_string: str, model_name: str) -> Tuple[str, bool]:
+async def query_gemini_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+    """Non-blocking Gemini generation via new GenAI SDK."""
     model_id = SUPPORTED_MODELS_GEMINI[model_name]
-    
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(f'models/{model_id}')
-        response = model.generate_content(input_string,request_options={"timeout": 1000})
-        return response.text, False
+        resp = await genai_client.aio.models.generate_content(
+            model=model_id,
+            contents=prompt
+        )  # :contentReference[oaicite:1]{index=1}
+        return resp.text, idx, model_name, False
     except Exception as e:
-        return f"Error querying {model_name}: {str(e)}", True
+        return f"Error querying {model_name}: {e}", idx, model_name, True
+
+async def query_llm_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+    if model_name in SUPPORTED_MODELS_OPENAI:
+        async with openai_sem:
+            return await query_openai_async(prompt, model_name, idx)
+    elif model_name in SUPPORTED_MODELS_GEMINI:
+        async with gemini_sem:
+            return await query_gemini_async(prompt, model_name, idx)
+    else:
+        raise ValueError(f"Unsupported model: {model_name}")
+    
+async def bulk_query_with_progress(prompts: List[str], models: List[str]):
+    """Query multiple LLMs with progress bar."""
+    # 1) Kick off all tasks, preserving order metadata
+    pairs = [(i, m) for i, _ in enumerate(prompts) for m in models]
+    tasks = [asyncio.create_task(query_llm_async(prompts[i], m, i)) for i, m in pairs]
+
+    # 2) Iterate as each completes, updating a tqdm bar
+    results = []
+    start = time.perf_counter()
+    for task in tqdm(asyncio.as_completed(tasks),
+                     total=len(tasks),
+                     desc="Querying LLMs"):
+        res = await task
+        results.append(res)
+    elapsed = time.perf_counter() - start
+
+    print(f"\n✅ All {len(tasks)} requests completed in {elapsed:.2f}s")
+    return results
+
+async def bulk_query_ordered(prompts, models):
+    """Query multiple LLMs without progress bar to maintain order."""
+    pairs = [(i, m) for i in range(len(prompts)) for m in models]
+    tasks = [asyncio.create_task(query_llm_async(prompts[i], m))
+             for i, m in pairs]
+
+    # Gather keeps the original order
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    # Now zip directly
+    return results
+
+if __name__ == "__main__":
+    prompts = ["What is 2+2?", "What is 2+3?", "How many r's are there in the word 'strawberry'?", "What is the capital of France?", "What is the capital of Germany?"]
+    models = ["GPT-4o-mini", "Gemini 2.0 Flash", "Gemini 2.0 Flash Thinking"]
+    results = asyncio.run(bulk_query_with_progress(prompts, models))
+    for (text, idx, model, error) in results:
+        status = "❌" if error else "✔️"
+        print(f"{status} [model={model!r}] prompt_idx={idx} → {text[:60]}{'…' if len(text)>60 else ''}")
