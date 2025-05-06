@@ -179,4 +179,6 @@ output/*
 
 dev/
 
+test/results/*
+
 results/*
