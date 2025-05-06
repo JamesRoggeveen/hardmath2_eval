@@ -54,7 +54,7 @@ jobs:
           # Example: Copying files/dirs from source checkout to target checkout
           # Adjust these commands based on what you need to copy
           # Using rsync is often more robust for copying directories
-          rsync -av --delete ./requirements.txt "$TARGET_DIR/requirements.txt"
+          rsync -av --delete ./requirements.dev.txt "$TARGET_DIR/requirements.txt"
           rsync -av --delete ./setup.py "$TARGET_DIR/setup.py"
           rsync -av --delete ./src/ "$TARGET_DIR/src/"
           rsync -av --delete ./scripts/ "$TARGET_DIR/scripts/"
