@@ -1,0 +1,46 @@
+name: Build & Push Dataset to GitHub
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_REPO: ${{ secrets.GH_REPO }}     # e.g., 'username/my-dataset'
+      GH_DATASET_DIR: gh-repo
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GH_REPO }}
+          token:     ${{ env.GH_TOKEN }}
+          path:      ${{ env.GH_DATASET_DIR }}
+
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "CI Bot"
+          git config --global user.email "ci-bot@users.noreply.github.com"
+
+      - name: Commit & Push changes
+        working-directory: ${{ env.GH_DATASET_DIR }}
+        env:
+          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
+        run: |
+          git add requirements.*.txt src/ scripts/ README.md || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto-update codebase [skip ci]"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
