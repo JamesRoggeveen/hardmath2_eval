@@ -37,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
         run: |
-          git add requirements.*.txt src/ scripts/ README.md || true
+          git add requirements.*.txt setup.py src/ scripts/ README.md || true
           if ! git diff --cached --quiet; then
             git commit -m "Auto-update codebase [skip ci]"
             git push origin main
