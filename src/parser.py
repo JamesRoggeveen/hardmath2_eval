@@ -225,9 +225,6 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
 
         # 3) Replace with “ space + the bare function name ”
         current_string = pattern.sub(r' \1', current_string)
-        # Find known functions that are using implicit application to add parentheses, i.e \sin \theta -> \sin(\theta)
-        # function_pattern = fr'(?:\\)?({"|".join(current_known_functions)})(?![a-zA-Z])\s*([^{{}}\s()+\-*\/^]+)'
-        # current_string = re.sub(function_pattern, r' \1(\2)', current_string)
         pattern = re.compile(
             r'(?:\\)?'                                 # optional backslash
             r'(' + '|'.join(map(re.escape, current_known_functions)) + r')'# the function (or placeholder)
@@ -236,14 +233,7 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
             r'([^{}\s()+\-*/^]+)'                      # the bare argument
         )
 
-        # 3) replace
         current_string = pattern.sub(r'\1(\2)', current_string)
-        # Replace intermediate functions with the square of the argument of the function to solve issues like cos^2 x not parsing. This needs to be done after the implicit application is resolved. Thus, we use intermediate functions to earlier replace all instances of squared trig functions with another name.
-        # for function, replacement in intermediate_functions.items():
-        #     pattern = re.compile(
-        #         fr'{function}(?P<content>(?P<paren>\((?:[^()]+|(?&paren))*\)))'
-        #     )
-        #     current_string = pattern.sub(fr'{replacement}\g<content>^2', current_string)
 
         current_string = decode_frac_powers(current_string)
         for pattern, replacement in replacement_rules.items():
@@ -501,42 +491,6 @@ def unshield_integrals(s: str, integrals: Dict[str,str]) -> str:
         tmpl = integrals[key]
         patt = re.compile(re.escape(key) + r'(.*?)' + re.escape(key), re.DOTALL)
         s = patt.sub(lambda m, T=tmpl: T.replace("{EXPR}", m.group(1)), s)
-    return s
-
-    for key in sorted(integrals, key=len, reverse=True):
-        tmpl = integrals[key]
-        patt = re.compile(
-            re.escape(key) + r'(.*?)' + re.escape(key),
-            re.DOTALL
-        )
-        s = patt.sub(lambda mo, T=tmpl: T.replace("{EXPR}", mo.group(1)), s)
-
-    # --- 2) Numeric‐evaluate ALL definite integrals in s ---
-    #    Match integrate(some_python_expr,(var,lo,hi))
-    int_re = re.compile(
-        r'integrate\('
-          r'(?P<expr>.+?)'              # non‐greedy up to the next comma
-        r',\('
-          r'(?P<var>\w+),'              # the variable
-          r'(?P<lo>[^,]+),'             # lower limit
-          r'(?P<hi>[^)]+)'              # upper limit
-        r'\)\)',
-        re.DOTALL
-    )
-
-    def _eval(m):
-        # parse out the pieces
-        expr_str = m.group('expr')
-        var      = sp.symbols(m.group('var'))
-        lo       = sp.sympify(m.group('lo'))
-        hi       = sp.sympify(m.group('hi'))
-        expr     = sp.sympify(expr_str)
-        # do the integral and evalf
-        val = sp.integrate(expr, (var, lo, hi)).evalf(15)
-        # return a plain decimal literal
-        return str(float(val))
-
-    s = int_re.sub(lambda m: _eval(m), s)
     return s
 
 def lex_identifiers(s: str, TOKEN_RE: re.Pattern) -> str:

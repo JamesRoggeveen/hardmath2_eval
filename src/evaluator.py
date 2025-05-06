@@ -1,44 +1,13 @@
 """
-Evaluator module for handling LLM queries and evaluating mathematical solutions.
+Evaluator module evaluating mathematical solutions.
 """
 
 import os
 import numpy as np
-import google.generativeai as genai
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional, Tuple, Union, Callable
 import src.parser as parser
-import src.parser_cmt as parser_cmt
-import src.parser_lark as parser_lark
 from src.parser import ParsingResult
-from openai import OpenAI
-from collections import Counter
-# Get the API key from environment variable
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-if not GEMINI_API_KEY:
-    raise ValueError("Gemini API key not found in environment variables")
-if not OPENAI_API_KEY:
-    raise ValueError("OpenAI API key not found in environment variables")
-
-# Define supported models
-SUPPORTED_MODELS_GEMINI = {
-    "Gemini 2.0 Flash Thinking": "gemini-2.0-flash-thinking-exp",
-    "Gemini 2.0 Flash": "gemini-2.0-flash",
-    "Gemini 2.5 Flash Thinking": "gemini-2.5-pro-exp-03-25",
-    "Gemini 2.5 Pro Preview": "gemini-2.5-pro-preview-03-25"
-}
-
-SUPPORTED_MODELS_OPENAI = {
-    "GPT-4o": "gpt-4o",
-    "GPT-4o-mini": "gpt-4o-mini",
-    "GPT-o3-mini": "o3-mini",
-    "GPT-o1-mini": "o1-mini",
-    "GPT-o1": "o1"
-}
-
-# Combine the dictionaries using the | operator (Python 3.9+) or dict.update()
-SUPPORTED_MODELS = {**SUPPORTED_MODELS_GEMINI, **SUPPORTED_MODELS_OPENAI}
 
 @dataclass
 class EvaluationResult:
@@ -71,40 +40,7 @@ class EvaluationResult:
             
         return result
 
-def query_llm(input_string: str, model_name: str) -> Tuple[str, bool]:
-    """Query an LLM with the given input string."""
-    if model_name in SUPPORTED_MODELS_OPENAI:
-        return query_openai(input_string, model_name)
-    elif model_name in SUPPORTED_MODELS_GEMINI:
-        return query_gemini(input_string, model_name)
-    else:
-        return f"Unsupported model: {model_name}. Supported models: {', '.join(SUPPORTED_MODELS.keys())}", True
-
-def query_openai(input_string: str, model_name: str) -> Tuple[str, bool]:
-    model_id = SUPPORTED_MODELS_OPENAI[model_name]
-    
-    try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
-        response = client.chat.completions.create(
-            model=model_id,
-            messages=[{"role": "user", "content": input_string}]
-        )
-        return response.choices[0].message.content, False
-    except Exception as e:
-        return f"Error querying {model_name}: {str(e)}", True
-
-def query_gemini(input_string: str, model_name: str) -> Tuple[str, bool]:
-    model_id = SUPPORTED_MODELS_GEMINI[model_name]
-    
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(f'models/{model_id}')
-        response = model.generate_content(input_string,request_options={"timeout": 1000})
-        return response.text, False
-    except Exception as e:
-        return f"Error querying {model_name}: {str(e)}", True
-
-def evaluate_model(query_string: str, solution_string: str, parameter_string: str, function_str: str, model_name: str, parse_function: Callable, eval_function: Callable) -> EvaluationResult:
+def evaluate_model(model_response: str, solution_string: str, parameter_string: str, function_str: str, model_name: str, parse_function: Callable, eval_function: Callable) -> EvaluationResult:
     """Evaluate an LLM's solution against a reference solution."""
     result = EvaluationResult(model_name=model_name)
     
@@ -115,12 +51,6 @@ def evaluate_model(query_string: str, solution_string: str, parameter_string: st
         return result
 
     result.solution_result = solution_result
-    
-    # Get model response
-    model_response, query_error = query_llm(query_string, model_name)
-    if query_error:
-        result.error_message = model_response
-        return result
     
     result.model_response = model_response
     
@@ -146,62 +76,8 @@ def evaluate_numeric_solution(query_string: str, solution_string: str, model_nam
 def evaluate_functional_solution(query_string: str, solution_string: str, parameter_string: str, function_string: str, model_name: str) -> EvaluationResult:
     print("Entering evaluate_functional_solution")
     return evaluate_model(query_string, solution_string, parameter_string, function_string, model_name, parser.solution_to_sympy, is_equivalent_functional_form)
-
-def evaluate_solution_cmt_numerics(query_string: str, solution_string: str, parameter_string: str, model_name: str) -> EvaluationResult:
-    """Evaluate an LLM's solution against a reference solution."""
-    print("Entering evaluate_solution_cmt_numerics")
-    result = EvaluationResult(model_name=model_name)
-    
-    # Get model response
-    model_response, query_error = query_llm(query_string, model_name)
-    if query_error:
-        result.error_message = model_response
-        return result
-    result.model_response = model_response
-
-    # TODO: Will come back later
-    result.solution_result = None
-    result.model_result = None
-    
-    # Compare evaluation results
-    try:
-        isequal_=parser_cmt.isequal_numerics(LLM_output=model_response, ground_truth=solution_string)
-        result.is_equivalent = isequal_
-        result.success = True
-        return result
-    except Exception as e:
-        result.error_message = f"Error comparing evaluation results: {str(e)}"
-        return result
-
-def evaluate_solution_cmt_symbolics(query_string: str, solution_string: str, parameter_string: str, model_name: str) -> EvaluationResult:
-    """Evaluate an LLM's solution against a reference solution."""
-    print("Entering evaluate_solution_cmt_symbolics")
-    result = EvaluationResult(model_name=model_name)
-    
-    # Get model response
-    model_response, query_error = query_llm(query_string, model_name)
-    if query_error:
-        result.error_message = model_response
-        return result
-    result.model_response = model_response
-
-    # TODO: Will come back later
-    result.solution_result = None
-    result.model_result = None
-    
-    # Compare evaluation results
-    try:
-        isequal_=parser_lark.isequal_symbolics(LLM_output=model_response, ground_truth=solution_string, noncomm_str = parameter_string)
-        result.is_equivalent = isequal_
-        result.success = True
-        return result
-    except Exception as e:
-        result.error_message = f"Error comparing evaluation results: {str(e)}"
     
 def is_equivalent_functional_form(result: EvaluationResult) -> EvaluationResult:
-    """Compare two sets of latex expressions using Counters. This hash map comparison relies on the fact that
-    the resulting sympy strings must be identical for the two expressions to be equivalent. This is a potential point of failure but results from the fact that Sympy equals does not work for expressions with non-commutative symbols. For now we simply expand all sympy expressions but in the future we should build a more robust set of rewrite rules to ensure equivalent expressions render the same Sympy expression."""
-
     try:
         # Get sympy expressions
         model_exprs = result.model_result.sympy_expressions
@@ -237,16 +113,11 @@ def is_equivalent_functional_form(result: EvaluationResult) -> EvaluationResult:
                     expression_difference.append(diff)
                     results[i,j] = (diff.simplify() == 0)
             result.is_equivalent = all(any(row) for row in results)
-        # try:
-        #     model_exprs = [expr.expand() for expr in model_exprs]
-        #     solution_exprs = [expr.expand() for expr in solution_exprs]
+
         except Exception as e:
             result.error_message = f"Error expanding expressions: {str(e)}"
             result.success = False
             return result
-            
-        # Compare expressions using Counter
-        # result.is_equivalent = Counter(model_exprs) == Counter(solution_exprs)
         result.success = True
         return result
         

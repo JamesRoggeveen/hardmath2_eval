@@ -180,5 +180,3 @@ output/*
 dev/
 
 test/results/*
-
-fluids/
