@@ -24,7 +24,7 @@ def format_problem_type(problem_type: str) -> str:
     return problem_type.replace('_', ' ').title()
 
 def generate_latex_table(results: List[Dict[str, Any]]) -> str:
-    """Generate a LaTeX table showing success/failure for each problem."""
+    """Generate LaTeX tables showing success rates for each problem."""
     # Get models dynamically from results
     models = get_models_from_results(results)
     if not models:
@@ -33,7 +33,25 @@ def generate_latex_table(results: List[Dict[str, Any]]) -> str:
     # Create model labels (A, B, C, etc.)
     model_labels = {model: chr(65 + i) for i, model in enumerate(models)}
     
-    # Start table
+    # Group results by type and prompt_idx
+    results_by_type = {}
+    for result in results:
+        problem_type = result.get('type', 'Unknown')
+        prompt_idx = result.get('prompt_idx', 0)
+        model_name = result.get('model_name')
+        is_equivalent = result.get('is_equivalent', False)
+        query_idx = result.get('query_idx', 0)
+        
+        if problem_type not in results_by_type:
+            results_by_type[problem_type] = {}
+        if prompt_idx not in results_by_type[problem_type]:
+            results_by_type[problem_type][prompt_idx] = {}
+        if model_name not in results_by_type[problem_type][prompt_idx]:
+            results_by_type[problem_type][prompt_idx][model_name] = []
+            
+        results_by_type[problem_type][prompt_idx][model_name].append(is_equivalent)
+    
+    # Generate one-shot success table
     latex = "\\begin{table}[h]\n"
     latex += "\\centering\n"
     latex += "\\begin{tabular}{|l|l|" + "|c" * len(models) + "|}\n"
@@ -41,43 +59,29 @@ def generate_latex_table(results: List[Dict[str, Any]]) -> str:
     latex += "\\textbf{Type} & \\textbf{Prompt} & " + " & ".join(f"\\textbf{{{label}}}" for label in model_labels.values()) + " \\\\\n"
     latex += "\\hline\n"
     
-    # Group results by type and prompt_idx
-    results_by_type = {}
-    for result in results:
-        problem_type = result.get('type', 'Unknown')
-        prompt_idx = result.get('prompt_idx', 0)
-        
-        if problem_type not in results_by_type:
-            results_by_type[problem_type] = {}
-        if prompt_idx not in results_by_type[problem_type]:
-            results_by_type[problem_type][prompt_idx] = {}
-            
-        model_name = result.get('model_name')
-        is_equivalent = result.get('is_equivalent', False)
-        results_by_type[problem_type][prompt_idx][model_name] = is_equivalent
-    
     # Sort types alphabetically
     for problem_type in sorted(results_by_type.keys()):
         # Sort prompts within each type
         for prompt_idx in sorted(results_by_type[problem_type].keys()):
             row = f"{format_problem_type(problem_type)} & {prompt_idx}"
             
-            # Add success/failure for each model
+            # Add success/failure for each model (all queries must be correct)
             for model in models:
-                is_correct = results_by_type[problem_type][prompt_idx].get(model, False)
-                if is_correct:
-                    row += " & \\cellcolor{green!25}\\textcolor{green!25}{$\\checkmark$}"  # Success
+                query_results = results_by_type[problem_type][prompt_idx].get(model, [])
+                all_correct = all(query_results) if query_results else False
+                if all_correct:
+                    row += " & \\cellcolor{successgreen!25}\\textcolor{black}{$\\checkmark$}"  # Success
                 else:
-                    row += " & \\cellcolor{red!25}\\textcolor{red!25}{$\\times$}"  # Failure
+                    row += " & \\cellcolor{failurered!25}\\textcolor{black}{$\\times$}"  # Failure
             
             row += " \\\\\n\\hline\n"
             latex += row
     
-    # End table
+    # End one-shot table
     latex += "\\end{tabular}\n"
-    latex += "\\caption{Model Performance Summary}\n"
+    latex += "\\caption{One-Shot Success Rate (All Queries Correct)}\n"
     
-    # Add key with model names on separate lines
+    # Add key with model names
     latex += "\\begin{center}\n"
     latex += "\\begin{tabular}{ll}\n"
     latex += "\\hline\n"
@@ -88,8 +92,58 @@ def generate_latex_table(results: List[Dict[str, Any]]) -> str:
     latex += "\\hline\n"
     latex += "\\end{tabular}\n"
     latex += "\\end{center}\n"
+    latex += "\\end{table}\n\n"
     
+    # Generate percentage success table
+    latex += "\\begin{table}[h]\n"
+    latex += "\\centering\n"
+    latex += "\\begin{tabular}{|l|l|" + "|c" * len(models) + "|}\n"
+    latex += "\\hline\n"
+    latex += "\\textbf{Type} & \\textbf{Prompt} & " + " & ".join(f"\\textbf{{{label}}}" for label in model_labels.values()) + " \\\\\n"
+    latex += "\\hline\n"
+    
+    # Sort types alphabetically
+    for problem_type in sorted(results_by_type.keys()):
+        # Sort prompts within each type
+        for prompt_idx in sorted(results_by_type[problem_type].keys()):
+            row = f"{format_problem_type(problem_type)} & {prompt_idx}"
+            
+            # Add percentage success for each model
+            for model in models:
+                query_results = results_by_type[problem_type][prompt_idx].get(model, [])
+                if query_results:
+                    success_rate = (sum(query_results) / len(query_results)) * 100
+                    # Color based on success rate
+                    if success_rate >= 75:
+                        color = "successgreen!25"
+                    elif success_rate >= 50:
+                        color = "yellow!25"
+                    else:
+                        color = "failurered!25"
+                    row += f" & \\cellcolor{{{color}}}\\textcolor{{black}}{{{success_rate:.0f}\\%}}"
+                else:
+                    row += " & \\cellcolor{failurered!25}\\textcolor{black}{N/A}"
+            
+            row += " \\\\\n\\hline\n"
+            latex += row
+    
+    # End percentage table
+    latex += "\\end{tabular}\n"
+    latex += "\\caption{Percentage of Correct Queries}\n"
+    
+    # Add key with model names
+    latex += "\\begin{center}\n"
+    latex += "\\begin{tabular}{ll}\n"
+    latex += "\\hline\n"
+    latex += "\\textbf{Label} & \\textbf{Model} \\\\\n"
+    latex += "\\hline\n"
+    for model, label in model_labels.items():
+        latex += f"{label} & {model} \\\\[0.5em]\n"
+    latex += "\\hline\n"
+    latex += "\\end{tabular}\n"
+    latex += "\\end{center}\n"
     latex += "\\end{table}\n"
+    
     return latex
 
 def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
@@ -105,64 +159,98 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
         if problem_type not in results_by_type:
             results_by_type[problem_type] = {}
         if prompt_idx not in results_by_type[problem_type]:
-            results_by_type[problem_type][prompt_idx] = []
+            results_by_type[problem_type][prompt_idx] = {}
             
-        results_by_type[problem_type][prompt_idx].append(result)
+        model_name = result.get('model_name', 'Unknown')
+        if model_name not in results_by_type[problem_type][prompt_idx]:
+            results_by_type[problem_type][prompt_idx][model_name] = []
+        results_by_type[problem_type][prompt_idx][model_name].append(result)
     
     # Sort types alphabetically
     for problem_type in sorted(results_by_type.keys()):
-        latex += f"\\section*{{{format_problem_type(problem_type)}}}\n"
+        latex += f"\\section{{{format_problem_type(problem_type)}}}\n"
         
         # Sort prompts within each type
         for prompt_idx in sorted(results_by_type[problem_type].keys()):
-            latex += f"\\subsection*{{Prompt {prompt_idx}}}\n"
+            latex += f"\\subsection{{Prompt {prompt_idx}}}\n"
             
-            # Add the prompt
-            prompt = results_by_type[problem_type][prompt_idx][0].get('prompt', '')
-            latex += "\\noindent\\textbf{{Prompt}}:\\par\n"
-            latex += f"\\noindent {prompt}\\par\n\\vspace{{1em}}\n\n"
+            # Add the full prompt
+            first_model = next(iter(results_by_type[problem_type][prompt_idx].values()))
+            first_result = first_model[0]
+            latex += "\\noindent\\textbf{{Full Prompt}}:\\par\n"
+            latex += f"\\noindent {first_result['prompt']}\\par\n\\vspace{{1em}}\n\n"
             
             # Add all model attempts
-            for result in results_by_type[problem_type][prompt_idx]:
-                model = result.get('model_name', 'Unknown')
-                eval_result = result.get('eval_result', {})
-                is_correct = eval_result.get('is_equivalent', False)
-                status = "\\textcolor{green}{$\\checkmark$}" if is_correct else "\\textcolor{red}{$\\times$}"
+            for model_name, model_results in sorted(results_by_type[problem_type][prompt_idx].items()):
+                # Sort results by query_idx
+                model_results.sort(key=lambda x: x.get('query_idx', 0))
                 
-                # Model header with explicit spacing
-                latex += f"\\noindent \\large {status} \\textbf{{{model}}} \\normalsize\n"
-                latex += "\\vspace{1em}\n\n"
+                # Model header
+                latex += f"\\noindent \\large \\textbf{{{model_name}}} \\normalsize\n"
+                latex += "\\vspace{0.5em}\n\n"
                 
-                # Add full model response with proper formatting
-                model_response = result.get('model_response', '')
-                if model_response:
-                    latex += "\\noindent\\textbf{{Full Model Response}}:\\par\n"
-                    # Escape special LaTeX characters and preserve whitespace
-                    model_response = model_response.replace('_', '\\_').replace('&', '\\&').replace('%', '\\%')
-                    latex += f"\\noindent {model_response}\\par\n\\vspace{{1em}}\n\n"
-                
-                # Add model solution
-                model_solution = eval_result.get('model', {}).get('extracted_solutions', [])
-                if model_solution:
-                    latex += "\\noindent\\textbf{Model Solution}:\\par\n"
-                    for solution in model_solution:
-                        latex += "\\[\n" + solution + "\\]\n"
-                    latex += "\n"
-                
-                # Add expected solution
-                expected_solution = eval_result.get('solution', {}).get('extracted_solutions', [])
-                if expected_solution:
-                    latex += "\\noindent\\textbf{Expected Solution}:\\par\n"
-                    for solution in expected_solution:
-                        latex += "\\[\n" + solution + "\\]\n"
-                    latex += "\n"
-                
-                # Add evaluation results
-                model_eval = eval_result.get('model', {}).get('evaluation_results', [])
-                solution_eval = eval_result.get('solution', {}).get('evaluation_results', [])
-                if model_eval and solution_eval:
-                    latex += "\\noindent\\textbf{Evaluation Results}:\\par\n"
-                    latex += f"Model: {model_eval}, Expected: {solution_eval}\n\n"
+                # Add each query attempt
+                for result in model_results:
+                    query_idx = result.get('query_idx', 0)
+                    is_correct = result.get('is_equivalent', False)
+                    status = "\\textcolor{successgreen}{{$\\checkmark$}}" if is_correct else "\\textcolor{failurered}{{$\\times$}}"
+                    
+                    # Query attempt header
+                    latex += f"\\noindent \\textbf{{Query {query_idx + 1}}} {status}\\par\n"
+                    latex += "\\vspace{0.5em}\n\n"
+                    
+                    # Add full model response
+                    model_response = result.get('model_response', '')
+                    if model_response:
+                        latex += "\\noindent\\textbf{{Full Model Response}}:\\par\n"
+                        # Escape special LaTeX characters and preserve whitespace
+                        model_response = (model_response
+                            .replace('&', '\\&')
+                            .replace('%', '\\%')
+                            .replace('#', '\\#')
+                            .replace('```', ''))  # Remove markdown code block delimiters
+                        latex += f"\\noindent {model_response}\\par\n\\vspace{{1em}}\n\n"
+                    
+                    # Add model solution
+                    model_solution = result.get('model_latex_solution', [])
+                    if model_solution:
+                        latex += "\\noindent\\textbf{{Model Solution}}:\\par\n"
+                        for solution in model_solution:
+                            # Clean up the solution and ensure it's properly formatted
+                            solution = solution.strip()
+                            if solution:
+                                # Remove any markdown code block delimiters
+                                solution = solution.replace('```', '')
+                                latex += "\\begin{equation*}\n"
+                                latex += solution + "\n"
+                                latex += "\\end{equation*}\n\n"
+                    
+                    # Add expected solution
+                    expected_solution = result.get('solution_latex', [])
+                    if expected_solution:
+                        latex += "\\noindent\\textbf{{Expected Solution}}:\\par\n"
+                        for solution in expected_solution:
+                            # Clean up the solution and ensure it's properly formatted
+                            solution = solution.strip()
+                            if solution:
+                                # Remove any markdown code block delimiters
+                                solution = solution.replace('```', '')
+                                latex += "\\begin{equation*}\n"
+                                latex += solution + "\n"
+                                latex += "\\end{equation*}\n\n"
+                    
+                    # Add evaluation results
+                    model_eval = result.get('model_eval_result', [])
+                    solution_eval = result.get('solution_eval_result', [])
+                    if model_eval and solution_eval:
+                        latex += "\\noindent\\textbf{{Evaluation Results}}:\\par\n"
+                        # Escape any special characters in evaluation results
+                        model_eval = str(model_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
+                        solution_eval = str(solution_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
+                        latex += f"Model: {model_eval}, Expected: {solution_eval}\n\n"
+                    
+                    # Add extra space between queries
+                    latex += "\\vspace{0.5em}\n\n"
                 
                 # Add extra space between models
                 latex += "\\vspace{1em}\n\n"
@@ -182,56 +270,86 @@ def generate_detailed_summary(results: List[Dict[str, Any]]) -> str:
         if problem_type not in results_by_type:
             results_by_type[problem_type] = {}
         if prompt_idx not in results_by_type[problem_type]:
-            results_by_type[problem_type][prompt_idx] = []
+            results_by_type[problem_type][prompt_idx] = {}
             
-        results_by_type[problem_type][prompt_idx].append(result)
+        model_name = result.get('model_name', 'Unknown')
+        if model_name not in results_by_type[problem_type][prompt_idx]:
+            results_by_type[problem_type][prompt_idx][model_name] = []
+        results_by_type[problem_type][prompt_idx][model_name].append(result)
     
     # Sort types alphabetically
     for problem_type in sorted(results_by_type.keys()):
-        latex += f"\\section*{{{format_problem_type(problem_type)}}}\n"
+        latex += f"\\section{{{format_problem_type(problem_type)}}}\n"
         
         # Sort prompts within each type
         for prompt_idx in sorted(results_by_type[problem_type].keys()):
-            latex += f"\\subsection*{{Prompt {prompt_idx}}}\n"
+            latex += f"\\subsection{{Prompt {prompt_idx}}}\n"
             
-            # Add the prompt from the first result for this type and prompt_idx
-            first_result = results_by_type[problem_type][prompt_idx][0]
-            prompt = first_result['prompt']  # Direct access since we know it exists
-            latex += "\\noindent\\textbf{{Prompt}}:\\par\n"
-            latex += f"\\noindent {prompt}\\par\n\\vspace{{1em}}\n\n"
+            # Add the full prompt
+            first_model = next(iter(results_by_type[problem_type][prompt_idx].values()))
+            first_result = first_model[0]
+            latex += "\\noindent\\textbf{{Full Prompt}}:\\par\n"
+            latex += f"\\noindent {first_result['prompt']}\\par\n\\vspace{{1em}}\n\n"
             
             # Add all model attempts
-            for result in results_by_type[problem_type][prompt_idx]:
-                model = result.get('model_name', 'Unknown')
-                is_correct = result.get('is_equivalent', False)
-                status = "\\textcolor{green}{$\\checkmark$}" if is_correct else "\\textcolor{red}{$\\times$}"
+            for model_name, model_results in sorted(results_by_type[problem_type][prompt_idx].items()):
+                # Sort results by query_idx
+                model_results.sort(key=lambda x: x.get('query_idx', 0))
                 
-                # Model header with explicit spacing
-                latex += f"\\noindent \\large {status} \\textbf{{{model}}} \\normalsize\n"
-                latex += "\\vspace{1em}\n\n"
+                # Model header
+                latex += f"\\noindent \\large \\textbf{{{model_name}}} \\normalsize\n"
+                latex += "\\vspace{0.5em}\n\n"
                 
-                # Add model solution
-                model_solution = result.get('model_latex_solution', '')
-                if model_solution:
-                    latex += "\\noindent\\textbf{Model Solution}:\\par\n"
-                    for solution in model_solution:
-                        latex += "\\[\n" + solution + "\\]\n"
-                    latex += "\n"
-                
-                # Add expected solution
-                expected_solution = result.get('solution_latex', '')
-                if expected_solution:
-                    latex += "\\noindent\\textbf{Expected Solution}:\\par\n"
-                    for solution in expected_solution:
-                        latex += "\\[\n" + solution + "\\]\n"
-                    latex += "\n"
-                
-                # Add evaluation results
-                model_eval = result.get('model_eval_result', '')
-                solution_eval = result.get('solution_eval_result', '')
-                if model_eval and solution_eval:
-                    latex += "\\noindent\\textbf{Evaluation Results}:\\par\n"
-                    latex += f"Model: {model_eval}, Expected: {solution_eval}\n\n"
+                # Add each query attempt
+                for result in model_results:
+                    query_idx = result.get('query_idx', 0)
+                    is_correct = result.get('is_equivalent', False)
+                    status = "\\textcolor{successgreen}{{$\\checkmark$}}" if is_correct else "\\textcolor{failurered}{{$\\times$}}"
+                    
+                    # Query attempt header
+                    latex += f"\\noindent \\textbf{{Query {query_idx + 1}}} {status}\\par\n"
+                    latex += "\\vspace{0.5em}\n\n"
+                    
+                    # Add model solution
+                    model_solution = result.get('model_latex_solution', [])
+                    if model_solution:
+                        latex += "\\noindent\\textbf{{Model Solution}}:\\par\n"
+                        for solution in model_solution:
+                            # Clean up the solution and ensure it's properly formatted
+                            solution = solution.strip()
+                            if solution:
+                                # Remove any markdown code block delimiters
+                                solution = solution.replace('```', '')
+                                latex += "\\begin{equation*}\n"
+                                latex += solution + "\n"
+                                latex += "\\end{equation*}\n\n"
+                    
+                    # Add expected solution
+                    expected_solution = result.get('solution_latex', [])
+                    if expected_solution:
+                        latex += "\\noindent\\textbf{{Expected Solution}}:\\par\n"
+                        for solution in expected_solution:
+                            # Clean up the solution and ensure it's properly formatted
+                            solution = solution.strip()
+                            if solution:
+                                # Remove any markdown code block delimiters
+                                solution = solution.replace('```', '')
+                                latex += "\\begin{equation*}\n"
+                                latex += solution + "\n"
+                                latex += "\\end{equation*}\n\n"
+                    
+                    # Add evaluation results
+                    model_eval = result.get('model_eval_result', [])
+                    solution_eval = result.get('solution_eval_result', [])
+                    if model_eval and solution_eval:
+                        latex += "\\noindent\\textbf{{Evaluation Results}}:\\par\n"
+                        # Escape any special characters in evaluation results
+                        model_eval = str(model_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
+                        solution_eval = str(solution_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
+                        latex += f"Model: {model_eval}, Expected: {solution_eval}\n\n"
+                    
+                    # Add extra space between queries
+                    latex += "\\vspace{0.5em}\n\n"
                 
                 # Add extra space between models
                 latex += "\\vspace{1em}\n\n"
@@ -265,11 +383,37 @@ def main():
     summary_latex += "\\usepackage{booktabs}\n"
     summary_latex += "\\usepackage{hyperref}\n"
     summary_latex += "\\usepackage{geometry}\n"
+    summary_latex += "\\usepackage{tocloft}\n"  # For better TOC control
     summary_latex += "\\geometry{margin=1in}\n"
+    summary_latex += "\\definecolor{successgreen}{RGB}{0,128,0}\n"  # Define success green color
+    summary_latex += "\\definecolor{failurered}{RGB}{255,0,0}\n"    # Define failure red color
+    summary_latex += "\\hypersetup{\n"
+    summary_latex += "    colorlinks=true,\n"
+    summary_latex += "    linkcolor=blue,\n"
+    summary_latex += "    filecolor=magenta,\n"
+    summary_latex += "    urlcolor=cyan,\n"
+    summary_latex += "    pdftitle={LLM Evaluation Results},\n"
+    summary_latex += "    pdfpagemode=FullScreen,\n"
+    summary_latex += "}\n"
+    summary_latex += "\\setcounter{tocdepth}{2}\n"  # Set TOC depth to include sections and subsections
+    summary_latex += "\\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}\n"  # Add dots to TOC
     summary_latex += "\\begin{document}\n\n"
     
+    # Add title and table of contents
+    summary_latex += "\\title{LLM Evaluation Results}\n"
+    summary_latex += "\\author{Generated Report}\n"
+    summary_latex += "\\date{\\today}\n"
+    summary_latex += "\\maketitle\n\n"
+    summary_latex += "\\tableofcontents\n"
+    summary_latex += "\\newpage\n\n"
+    
+    # Add section for tables
+    summary_latex += "\\section{Performance Tables}\n"
     summary_latex += generate_latex_table(summary_results)
     summary_latex += "\n\\newpage\n"
+    
+    # Add section for detailed results
+    summary_latex += "\\section{Detailed Results}\n"
     summary_latex += generate_detailed_summary(summary_results)
     
     summary_latex += "\\end{document}\n"
@@ -286,12 +430,37 @@ def main():
     full_latex += "\\usepackage{booktabs}\n"
     full_latex += "\\usepackage{hyperref}\n"
     full_latex += "\\usepackage{geometry}\n"
+    full_latex += "\\usepackage{tocloft}\n"  # For better TOC control
     full_latex += "\\geometry{margin=1in}\n"
+    full_latex += "\\definecolor{successgreen}{RGB}{0,128,0}\n"  # Define success green color
+    full_latex += "\\definecolor{failurered}{RGB}{255,0,0}\n"    # Define failure red color
+    full_latex += "\\hypersetup{\n"
+    full_latex += "    colorlinks=true,\n"
+    full_latex += "    linkcolor=blue,\n"
+    full_latex += "    filecolor=magenta,\n"
+    full_latex += "    urlcolor=cyan,\n"
+    full_latex += "    pdftitle={LLM Full Evaluation Results},\n"
+    full_latex += "    pdfpagemode=FullScreen,\n"
+    full_latex += "}\n"
+    full_latex += "\\setcounter{tocdepth}{2}\n"  # Set TOC depth to include sections and subsections
+    full_latex += "\\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}\n"  # Add dots to TOC
     full_latex += "\\begin{document}\n\n"
     
-    # Add table to full results using the same table generation function
+    # Add title and table of contents
+    full_latex += "\\title{LLM Full Evaluation Results}\n"
+    full_latex += "\\author{Generated Report}\n"
+    full_latex += "\\date{\\today}\n"
+    full_latex += "\\maketitle\n\n"
+    full_latex += "\\tableofcontents\n"
+    full_latex += "\\newpage\n\n"
+    
+    # Add section for tables
+    full_latex += "\\section{Performance Tables}\n"
     full_latex += generate_latex_table(summary_results)
     full_latex += "\n\\newpage\n"
+    
+    # Add section for full results
+    full_latex += "\\section{Full Results}\n"
     full_latex += generate_full_results_summary(full_results)
     
     full_latex += "\\end{document}\n"

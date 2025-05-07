@@ -187,3 +187,4 @@ results/*.aux
 results/*.out
 results/*.bbl
 results/*.blg
+results/*.toc

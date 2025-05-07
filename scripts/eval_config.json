@@ -9,5 +9,6 @@
         "Gemini 2.0 Flash": true,
         "Gemini 2.5 Flash Thinking": false,
         "Gemini 2.5 Pro Preview": false
-    }
+    },
+    "num_queries": 2
 } 
