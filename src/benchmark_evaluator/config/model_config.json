@@ -13,5 +13,6 @@
         "GPT-o3-mini": "o3-mini",
         "GPT-o1-mini": "o1-mini",
         "GPT-o1": "o1"
-    }
+    },
+    "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables."
 }

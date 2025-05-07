@@ -6,6 +6,7 @@ from typing import List
 
 from openai import AsyncOpenAI
 from google import genai
+from google.genai import types
 from tqdm import tqdm
 import json
 from importlib import resources
@@ -30,6 +31,7 @@ config = load_config("model_config")
 SUPPORTED_MODELS_GEMINI = config["SUPPORTED_MODELS_GEMINI"]
 SUPPORTED_MODELS_OPENAI = config["SUPPORTED_MODELS_OPENAI"]
 SUPPORTED_MODELS = SUPPORTED_MODELS_GEMINI | SUPPORTED_MODELS_OPENAI
+SYSTEM_INSTRUCTION = config["SYSTEM_INSTRUCTION"]
 
 # Semaphores to limit the number of concurrent requests
 openai_sem = asyncio.Semaphore(5)
@@ -60,9 +62,12 @@ async def query_openai_async(prompt: str, model_name: str, idx: int = 0) -> Tupl
     model_id = SUPPORTED_MODELS_OPENAI[model_name]
     try:
         client = get_openai_client()
+        system_messages = [
+            {"role": "system", "content": SYSTEM_INSTRUCTION}
+        ]
         response = await client.chat.completions.create(
             model=model_id,
-            messages=[{"role": "user", "content": prompt}],
+            messages=system_messages + [{"role": "user", "content": prompt}],
         )
         return response.choices[0].message.content, idx, model_name, False
     except Exception as e:
@@ -75,6 +80,9 @@ async def query_gemini_async(prompt: str, model_name: str, idx: int = 0) -> Tupl
         client = get_gemini_client()
         resp = await client.aio.models.generate_content(
             model=model_id,
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_INSTRUCTION
+            ),
             contents=prompt
         )
         return resp.text, idx, model_name, False
