@@ -181,4 +181,9 @@ dev/
 
 test/results/*
 
-results/*
+results/*.log
+results/*.synctex.gz
+results/*.aux
+results/*.out
+results/*.bbl
+results/*.blg

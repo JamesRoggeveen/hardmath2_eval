@@ -13,6 +13,12 @@ setup(
         "requests==2.32.2",
         "openai==1.73.0",
         "datasets==3.5.1",
+        "matplotlib==3.10.0",
+        "tqdm==4.67.1",
+        "python-dotenv==1.1.0",
     ],
-    python_requires=">=3.8",
+    package_data={
+        "benchmark_evaluator": ["config/*.json"],  # <— include all .json under config
+    },
+    python_requires=">=3.12",
 )

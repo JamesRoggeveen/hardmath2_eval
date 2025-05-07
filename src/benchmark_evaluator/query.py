@@ -7,51 +7,60 @@ from typing import List
 from openai import AsyncOpenAI
 from google import genai
 from tqdm import tqdm
-
+import json
+from importlib import resources
 from dotenv import load_dotenv
 # Load keys from a .env file in your project root
 load_dotenv()
 
+# Initialize clients as None
+openai_client = None
+genai_client = None
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-if not GEMINI_API_KEY or not OPENAI_API_KEY:
-    raise RuntimeError("Missing GEMINI_API_KEY or OPENAI_API_KEY")
+def load_config(name: str) -> dict:
+    """
+    Load benchmark_evaluation/config/{name}.json
+    """
+    pkg = __package__                  # "benchmark_evaluation"
+    resource = f"config/{name}.json"
+    with resources.open_text(pkg, resource) as fp:
+        return json.load(fp)
 
-# OpenAI async client (httpx under the hood)
-openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)  # :contentReference[oaicite:0]{index=0}
-
-# Gemini new SDK client with async support
-genai_client = genai.Client(api_key=GEMINI_API_KEY)
+config = load_config("model_config")
+SUPPORTED_MODELS_GEMINI = config["SUPPORTED_MODELS_GEMINI"]
+SUPPORTED_MODELS_OPENAI = config["SUPPORTED_MODELS_OPENAI"]
+SUPPORTED_MODELS = SUPPORTED_MODELS_GEMINI | SUPPORTED_MODELS_OPENAI
 
 # Semaphores to limit the number of concurrent requests
 openai_sem = asyncio.Semaphore(5)
 gemini_sem = asyncio.Semaphore(5)
 
-# Define supported models
-SUPPORTED_MODELS_GEMINI = {
-    "Gemini 2.0 Flash Thinking": "gemini-2.0-flash-thinking-exp",
-    "Gemini 2.0 Flash": "gemini-2.0-flash",
-    "Gemini 2.5 Flash Thinking": "gemini-2.5-pro-exp-03-25",
-    "Gemini 2.5 Pro Preview": "gemini-2.5-pro-preview-03-25"
-}
+def get_openai_client():
+    """Initialize and return OpenAI client if not already initialized."""
+    global openai_client
+    if openai_client is None:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("Missing OPENAI_API_KEY")
+        openai_client = AsyncOpenAI(api_key=api_key)
+    return openai_client
 
-SUPPORTED_MODELS_OPENAI = {
-    "GPT-4o": "gpt-4o",
-    "GPT-4o-mini": "gpt-4o-mini",
-    "GPT-o3-mini": "o3-mini",
-    "GPT-o1-mini": "o1-mini",
-    "GPT-o1": "o1"
-}
-
-# Combine the dictionaries using the | operator (Python 3.9+) or dict.update()
-SUPPORTED_MODELS = {**SUPPORTED_MODELS_GEMINI, **SUPPORTED_MODELS_OPENAI}
+def get_gemini_client():
+    """Initialize and return Gemini client if not already initialized."""
+    global genai_client
+    if genai_client is None:
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            raise RuntimeError("Missing GEMINI_API_KEY")
+        genai_client = genai.Client(api_key=api_key)
+    return genai_client
 
 async def query_openai_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking OpenAI chat completion."""
     model_id = SUPPORTED_MODELS_OPENAI[model_name]
     try:
-        response = await openai_client.chat.completions.create(
+        client = get_openai_client()
+        response = await client.chat.completions.create(
             model=model_id,
             messages=[{"role": "user", "content": prompt}],
         )
@@ -63,10 +72,11 @@ async def query_gemini_async(prompt: str, model_name: str, idx: int = 0) -> Tupl
     """Non-blocking Gemini generation via new GenAI SDK."""
     model_id = SUPPORTED_MODELS_GEMINI[model_name]
     try:
-        resp = await genai_client.aio.models.generate_content(
+        client = get_gemini_client()
+        resp = await client.aio.models.generate_content(
             model=model_id,
             contents=prompt
-        )  # :contentReference[oaicite:1]{index=1}
+        )
         return resp.text, idx, model_name, False
     except Exception as e:
         return f"Error querying {model_name}: {e}", idx, model_name, True

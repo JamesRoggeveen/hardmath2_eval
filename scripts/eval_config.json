@@ -1,0 +1,13 @@
+{
+    "models": {
+        "GPT-4o": true,
+        "GPT-4o-mini": false,
+        "GPT-o3-mini": false,
+        "GPT-o1-mini": false,
+        "GPT-o1": false,
+        "Gemini 2.0 Flash Thinking": true,
+        "Gemini 2.0 Flash": true,
+        "Gemini 2.5 Flash Thinking": false,
+        "Gemini 2.5 Pro Preview": false
+    }
+} 
