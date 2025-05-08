@@ -100,7 +100,7 @@ async def query_openai_async(client, prompt: str, model_name: str, idx: int = 0)
     except Exception as e:
         return f"Error querying {model_name}: {e}", idx, model_name, True
 
-async def query_gemini_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+async def query_gemini_async(client,prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking Gemini generation via new GenAI SDK."""
     model_id = SUPPORTED_MODELS_GEMINI[model_name]
     try:

@@ -376,74 +376,80 @@ def normalize_limit(lim: str) -> str:
     return t
 
 def shield_integrals(s: str, local_dict: Dict[str, sp.Symbol]={}) -> Tuple[str, Dict[str,str]]:
-    out: list[str] = []
+    """
+    Recursively find the rightmost `int_… dvar`, replace it with
+    a placeholder <INT#>…<INT#>, and collect a template for each
+    placeholder.  Inner integrals get shielded first.
+    """
     integrals: Dict[str,str] = {}
     counter = 0
-    i, L = 0, len(s)
 
-    while True:
-        idx = s.find(r'\int_', i)
+    def _shield(expr: str) -> str:
+        nonlocal counter
+        idx = expr.rfind(r'\int_')
         if idx < 0:
-            out.append(s[i:])
-            break
+            return expr
 
-        out.append(s[i:idx])
+        L = len(expr)
+        # 1) parse lower limit
         j = idx + len(r'\int_')
-
-        # --- parse lower limit: braces, backslash-command, or single char ---
-        if j < L and s[j] == '{':
-            raw_lo, j = _parse_braces(s, j)
-        elif j < L and s[j] == '\\':
-            m = re.match(r'\\[A-Za-z]+', s[j:])
+        if expr[j] == '{':
+            raw_lo, j = _parse_braces(expr, j)
+        elif expr[j] == '\\':
+            m = re.match(r'\\[A-Za-z]+', expr[j:])
             raw_lo = m.group(0)
             j += len(raw_lo)
         else:
-            raw_lo, j = s[j], j+1
+            raw_lo, j = expr[j], j+1
 
-        # --- expect '^' ---
-        if j < L and s[j] == '^':
+        # 2) expect '^'
+        if j < L and expr[j] == '^':
             j += 1
         else:
             raise ValueError("Missing '^' after lower limit")
 
-        # --- parse upper limit: same logic ---
-        if j < L and s[j] == '{':
-            raw_hi, j = _parse_braces(s, j)
-        elif j < L and s[j] == '\\':  # e.g. \infty or \alpha
-            m = re.match(r'\\[A-Za-z]+', s[j:])
+        # 3) parse upper limit
+        if expr[j] == '{':
+            raw_hi, j = _parse_braces(expr, j)
+        elif expr[j] == '\\':
+            m = re.match(r'\\[A-Za-z]+', expr[j:])
             raw_hi = m.group(0)
             j += len(raw_hi)
         else:
-            raw_hi, j = s[j], j+1
+            raw_hi, j = expr[j], j+1
 
-
-        # skip whitespace
-        while j < L and s[j].isspace():
+        # 4) skip whitespace
+        while j < L and expr[j].isspace():
             j += 1
 
-        # --- case A: leading \frac{dvar}{den} ---
-        if s.startswith(r'\frac{d', j):
+        # 5) parse integrand + differential
+        if expr.startswith(r'\frac{d', j):
+            # case A: \frac{dvar}{den}
             j_frac = j + len(r'\frac')
-            numb, j2 = _parse_braces(s, j_frac)       # "{dvar}"
+            numb, j2 = _parse_braces(expr, j_frac)
             m = re.match(r'\{d([A-Za-z]\w*)\}', numb)
             var = m.group(1) if m else 'x'
-            if j2 < L and s[j2] == '{':
-                denb, j3 = _parse_braces(s, j2)
+            if j2 < L and expr[j2] == '{':
+                denb, j3 = _parse_braces(expr, j2)
                 den = denb.strip('{}')
                 body = f"1/({den})"
                 end_diff = j3
             else:
                 body, end_diff = "", j2
-
         else:
-            # --- case B: find first 'd<var>' anywhere, strip off the 'd'... ---
+            # case B: scan for the first top‐level d<var>
             start_body = j
             brace_depth = paren_depth = 0
             var = None
             end_diff = j
 
             while j < L:
-                c = s[j]
+                if expr.startswith(r'\int_', j):
+                    # nested integral; but since we're peeling innermost first,
+                    # there shouldn't be any further \int_ here
+                    pass
+
+                c = expr[j]
                 if c == '{':
                     brace_depth += 1; j += 1
                 elif c == '}':
@@ -452,15 +458,14 @@ def shield_integrals(s: str, local_dict: Dict[str, sp.Symbol]={}) -> Tuple[str, 
                     paren_depth += 1; j += 1
                 elif c == ')':
                     paren_depth -= 1; j += 1
-                elif c == 'd':
-                    m = re.match(r'd([A-Za-z]\w*)', s[j:])
+                elif c == 'd' and brace_depth == 0 and paren_depth == 0:
+                    m = re.match(r'd([A-Za-z]\w*)', expr[j:])
                     if m:
                         var = m.group(1)
-                        end_body = j         # integrand is up to here
+                        end_body = j
                         end_diff = j + m.end()
                         break
-                    else:
-                        j += 1
+                    j += 1
                 else:
                     j += 1
 
@@ -469,26 +474,25 @@ def shield_integrals(s: str, local_dict: Dict[str, sp.Symbol]={}) -> Tuple[str, 
                 end_body = j
                 end_diff = j
 
-            body = s[start_body:end_body]
+            body = expr[start_body:end_body]
 
-        # --- record template + placeholder ---
-        if r'\infty' in raw_hi:
-            hi = raw_hi.replace(r'\infty', 'oo')
-        else:
-            hi = latex_to_expression(raw_hi, local_dict)
-        if r'\infty' in raw_lo:
-            lo = raw_lo.replace(r'\infty', 'oo')
-        else:
-            lo = latex_to_expression(raw_lo, local_dict)
+        # 6) build Sympy limits
+        lo = normalize_limit(raw_lo) if r'\infty' in raw_lo else latex_to_expression(raw_lo, local_dict)
+        hi = normalize_limit(raw_hi) if r'\infty' in raw_hi else latex_to_expression(raw_hi, local_dict)
+
+        # 7) record template + placeholder
         template = f"Integral({{EXPR}},({var},{lo},{hi}))"
         key = f"<INT{counter}>"
         integrals[key] = template
         counter += 1
 
-        out.append(f"{key}{body}{key}")
-        i = end_diff
+        # 8) splice in placeholder
+        new_expr = expr[:idx] + f"{key}{body}{key}" + expr[end_diff:]
+        # 9) recurse to catch any earlier (outer) integrals
+        return _shield(new_expr)
 
-    return "".join(out), integrals
+    result = _shield(s)
+    return result, integrals
 
 def unshield_integrals(s: str, integrals: Dict[str,str]) -> str:
     for key in sorted(integrals, key=len, reverse=True):
@@ -780,13 +784,15 @@ def evaluate_solution(solution_str: str, parameter_str: str = "", *args, **kwarg
     np.random.seed(42)
     
     try:
-        # Ensure x=2 if it's present
-        if result.parameter_dict and 'x' in result.parameter_dict:
-            parameter_values = {symbol: np.random.uniform(1, 2) for symbol in result.parameter_dict.values()}
-            parameter_values[result.parameter_dict['x']] = 2
-        else:
-            parameter_values = {symbol: np.random.uniform(1, 2) for symbol in result.parameter_dict.values()}
-        
+        # # Ensure x=2 if it's present
+        # if result.parameter_dict and 'x' in result.parameter_dict:
+        #     parameter_values = {symbol: np.random.uniform(1, 2) for symbol in result.parameter_dict.values()}
+        #     parameter_values[result.parameter_dict['x']] = 2
+        # else:
+        #     parameter_values = {symbol: np.random.uniform(1, 2) for symbol in result.parameter_dict.values()}
+
+        # Choose parameter values from a uniform distribution from 1 to 2 to avoid singularities and divide by 0 (in most cases)
+        parameter_values = {symbol: np.random.uniform(1, 2) for symbol in result.parameter_dict.values()}
         # Store the actual parameter values used in the evaluation
         result.parameter_values = parameter_values
         

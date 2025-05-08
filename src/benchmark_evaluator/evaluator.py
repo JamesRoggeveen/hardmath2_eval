@@ -154,7 +154,7 @@ def is_equivalent_numerics(result: EvaluationResult)->EvaluationResult:
                     result.success = True
                     result.is_equivalent = False
                     return result
-            equivalent *= np.allclose(model_element, solution_element, atol=1e-6)
+            equivalent *= np.allclose(model_element, solution_element, rtol=1e-6, atol=1e-12)
         result.is_equivalent = bool(equivalent)
         result.success = True
         return result
