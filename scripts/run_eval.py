@@ -1,6 +1,7 @@
 import json
 import asyncio
 import os
+import hashlib
 
 from benchmark_evaluator import bulk_query_with_progress, evaluate_solution
 from datasets import load_dataset
@@ -11,6 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 HUGGINGFACE_DATASET_NAME = "AnonBenchmark5727/benchmark_data"
+QUERY_LOG_FILE = "results/query_log.json"
 
 def load_config():
     """Load configuration from config.json file."""
@@ -70,6 +72,24 @@ def validate_models(config):
     validate_api_keys(selected_models)
     
     return selected_models
+
+def get_prompt_hash(prompt):
+    """Generate a hash for the prompt text."""
+    return hashlib.md5(prompt.encode()).hexdigest()
+
+def log_prompt(prompt, model_name, query_idx):
+    """Log a completed prompt query."""
+    log = set()
+    if os.path.exists(QUERY_LOG_FILE):
+        with open(QUERY_LOG_FILE, 'r') as f:
+            log = set(json.load(f))
+    
+    prompt_hash = get_prompt_hash(prompt)
+    log.add(prompt_hash)
+    
+    os.makedirs(os.path.dirname(QUERY_LOG_FILE), exist_ok=True)
+    with open(QUERY_LOG_FILE, 'w') as f:
+        json.dump(list(log), f, indent=2)
 
 def process_results(query_results, prompt_list, solution_list, parameter_list, type_list, index_list):
     """Process query results and generate evaluation results."""
@@ -154,6 +174,11 @@ def main():
         prompt_idx = i // total_queries_per_prompt
         query_idx = (i % total_queries_per_prompt) // len(selected_models)
         updated_results.append((response, prompt_idx, model_name, error, query_idx))
+        
+        # Log successful query
+        if not error:
+            log_prompt(prompt_list[prompt_idx], model_name, query_idx)
+    
     print(f"Number of updated results: {len(updated_results)}")
 
     # Process results
