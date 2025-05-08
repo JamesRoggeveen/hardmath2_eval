@@ -2,13 +2,19 @@
     "models": {
         "GPT-4o": true,
         "GPT-4o-mini": false,
+        "GPT-4.1": false,
+        "GPT-4.1-mini": false,
         "GPT-o3-mini": false,
-        "GPT-o1-mini": false,
+        "GPT-o4-mini": false,
         "GPT-o1": false,
-        "Gemini 2.0 Flash Thinking": true,
+        "GPT-o3": false,
+        "Gemini 2.0 Flash Thinking": false,
         "Gemini 2.0 Flash": true,
         "Gemini 2.5 Flash Thinking": false,
-        "Gemini 2.5 Pro Preview": false
+        "Gemini 2.5 Pro Preview": true,
+        "Claude 3.7 Sonnet": false,
+        "Claude 3.5 Sonnet": false,
+        "Claude 3.5 Haiku": false 
     },
-    "num_queries": 2
+    "num_queries": 1
 } 

@@ -7,6 +7,7 @@ from typing import List
 from openai import AsyncOpenAI
 from google import genai
 from google.genai import types
+import anthropic
 from tqdm import tqdm
 import json
 from importlib import resources
@@ -17,6 +18,8 @@ load_dotenv()
 # Initialize clients as None
 openai_client = None
 genai_client = None
+anthropic_client = None
+deepseek_client = None
 
 def load_config(name: str) -> dict:
     """
@@ -28,14 +31,19 @@ def load_config(name: str) -> dict:
         return json.load(fp)
 
 config = load_config("model_config")
+# Read in all the model configs
 SUPPORTED_MODELS_GEMINI = config["SUPPORTED_MODELS_GEMINI"]
 SUPPORTED_MODELS_OPENAI = config["SUPPORTED_MODELS_OPENAI"]
-SUPPORTED_MODELS = SUPPORTED_MODELS_GEMINI | SUPPORTED_MODELS_OPENAI
+SUPPORTED_MODELS_ANTHROPIC = config["SUPPORTED_MODELS_ANTHROPIC"]
+SUPPORTED_MODELS_DEEPSEEK = config["SUPPORTED_MODELS_DEEPSEEK"]
+SUPPORTED_MODELS = SUPPORTED_MODELS_GEMINI | SUPPORTED_MODELS_OPENAI | SUPPORTED_MODELS_ANTHROPIC | SUPPORTED_MODELS_DEEPSEEK
 SYSTEM_INSTRUCTION = config["SYSTEM_INSTRUCTION"]
 
 # Semaphores to limit the number of concurrent requests
-openai_sem = asyncio.Semaphore(5)
-gemini_sem = asyncio.Semaphore(5)
+openai_sem = asyncio.Semaphore(15)
+gemini_sem = asyncio.Semaphore(15)
+anthropic_sem = asyncio.Semaphore(15)
+deepseek_sem = asyncio.Semaphore(15)
 
 def get_openai_client():
     """Initialize and return OpenAI client if not already initialized."""
@@ -57,11 +65,30 @@ def get_gemini_client():
         genai_client = genai.Client(api_key=api_key)
     return genai_client
 
-async def query_openai_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+def get_anthropic_client():
+    """Initialize and return Anthropic client if not already initialized."""
+    global anthropic_client
+    if anthropic_client is None:
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise RuntimeError("Missing ANTHROPIC_API_KEY")
+        anthropic_client = anthropic.Anthropic(api_key=api_key)
+    return anthropic_client
+
+def get_deepseek_client():
+    """Initialize and return DeepSeek client if not already initialized."""
+    global deepseek_client
+    if deepseek_client is None:
+        api_key = os.environ.get("DEEPSEEK_API_KEY")
+        if not api_key:
+            raise RuntimeError("Missing DEEPSEEK_API_KEY")
+        deepseek_client = AsyncOpenAI(api_key=api_key, base_url="https://api.deepseek.com/v1")
+    return deepseek_client
+
+async def query_openai_async(client, prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking OpenAI chat completion."""
     model_id = SUPPORTED_MODELS_OPENAI[model_name]
     try:
-        client = get_openai_client()
         system_messages = [
             {"role": "system", "content": SYSTEM_INSTRUCTION}
         ]
@@ -88,14 +115,41 @@ async def query_gemini_async(prompt: str, model_name: str, idx: int = 0) -> Tupl
         return resp.text, idx, model_name, False
     except Exception as e:
         return f"Error querying {model_name}: {e}", idx, model_name, True
+    
+async def query_anthropic_async(client, prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+    """Non-blocking Anthropic chat completion."""
+    model_id = SUPPORTED_MODELS_ANTHROPIC[model_name]
+    try:
+        response = await client.messages.create(
+            model=model_id,
+            system=SYSTEM_INSTRUCTION,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=8192
+        )
+        return response.content, idx, model_name, False
+    except Exception as e:  
+        return f"Error querying {model_name}: {e}", idx, model_name, True
 
 async def query_llm_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     if model_name in SUPPORTED_MODELS_OPENAI:
+        client = get_openai_client()
         async with openai_sem:
-            return await query_openai_async(prompt, model_name, idx)
+            return await query_openai_async(client, prompt, model_name, idx)
     elif model_name in SUPPORTED_MODELS_GEMINI:
+        client = get_gemini_client()
         async with gemini_sem:
-            return await query_gemini_async(prompt, model_name, idx)
+            return await query_gemini_async(client, prompt, model_name, idx)
+    elif model_name in SUPPORTED_MODELS_ANTHROPIC:
+        client = get_anthropic_client()
+        async with anthropic_sem:
+            return await query_anthropic_async(client, prompt, model_name, idx)
+    elif model_name in SUPPORTED_MODELS_DEEPSEEK:
+        client = get_deepseek_client()
+        # DeepSeek uses OpenAI's API interface with a custom base URL
+        async with deepseek_sem:
+            return await query_openai_async(client, prompt, model_name, idx)
     else:
         raise ValueError(f"Unsupported model: {model_name}")
     

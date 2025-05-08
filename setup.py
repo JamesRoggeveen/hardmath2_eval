@@ -16,6 +16,7 @@ setup(
         "matplotlib==3.10.0",
         "tqdm==4.67.1",
         "python-dotenv==1.1.0",
+        "anthropic==0.51.0",
     ],
     package_data={
         "benchmark_evaluator": ["config/*.json"],  # <— include all .json under config

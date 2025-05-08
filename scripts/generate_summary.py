@@ -7,10 +7,7 @@ from typing import Dict, Any, List
 import re
 from collections import defaultdict
 
-from matplotlib import pyplot as plt
-import numpy as np
-
-def main():
+def generate_summary():
     with open('results/results.json', 'r') as f:
         results = json.load(f)
 
@@ -21,6 +18,25 @@ def main():
         prompt_idx = result['prompt_idx']
         results_by_model[model_name][prompt_idx].append(result)
 
+    # Get unique models and question types
+    models = sorted(list(results_by_model.keys()))
+    question_types = sorted(set(result['type'] for result in results))
+
+    # Calculate dataset distribution statistics - only count each unique problem once
+    problem_types = defaultdict(int)
+    seen_problems = set()  # Track unique problems by their prompt_idx
+    for result in results:
+        prob_type = result['type']
+        prompt_idx = result['prompt_idx']
+        # Only count each problem once, regardless of model or query
+        if prompt_idx not in seen_problems:
+            problem_types[prob_type] += 1
+            seen_problems.add(prompt_idx)
+
+    # Convert to percentages
+    total_problems = sum(problem_types.values())
+    problem_type_percentages = {k: (v/total_problems)*100 for k,v in problem_types.items()}
+
     # Calculate success rates for each model and prompt
     prompt_success_rates = defaultdict(dict)
     for model_name, prompt_results in results_by_model.items():
@@ -29,42 +45,20 @@ def main():
             success_rate = (successful_queries / len(queries)) * 100
             prompt_success_rates[model_name][prompt_idx] = success_rate
 
-    # Create a heatmap of success rates
-    models = list(results_by_model.keys())
-    prompt_indices = sorted(set().union(*[set(r.keys()) for r in prompt_success_rates.values()]))
-    
-    # Create the data matrix for the heatmap
-    data = np.zeros((len(models), len(prompt_indices)))
-    for i, model in enumerate(models):
-        for j, prompt_idx in enumerate(prompt_indices):
-            data[i, j] = prompt_success_rates[model].get(prompt_idx, 0)
-
-    plt.figure(figsize=(15, 8))
-    plt.imshow(data, cmap='RdYlGn', aspect='auto', vmin=0, vmax=100)
-    plt.colorbar(label='Success Rate (%)')
-    
-    # Add labels
-    plt.xticks(range(len(prompt_indices)), [f'Prompt {idx}' for idx in prompt_indices], rotation=45)
-    plt.yticks(range(len(models)), models)
-    plt.xlabel('Prompt Index')
-    plt.ylabel('Model')
-    plt.title('Success Rate by Prompt and Model')
-    
-    # Add text annotations
-    for i in range(len(models)):
-        for j in range(len(prompt_indices)):
-            plt.text(j, i, f'{data[i, j]:.1f}%', 
-                    ha='center', va='center',
-                    color='black' if data[i, j] < 50 else 'white')
-
-    plt.tight_layout()
-    plt.savefig('results/success_rate_heatmap.png')
-    plt.close()
-
-    print("Success rate heatmap saved as success_rate_heatmap.png")
-
     # Calculate and save summary statistics
-    summary_stats = {}
+    summary_stats = {
+        "models": models,
+        "question_types": question_types,
+        "dataset_distribution": {
+            "total_problems": total_problems,
+            "problem_type_counts": dict(problem_types),
+            "problem_type_percentages": problem_type_percentages
+        },
+        "prompt_success_rates": {
+            model: dict(rates) for model, rates in prompt_success_rates.items()
+        }
+    }
+    
     for model_name, prompt_results in results_by_model.items():
         total_prompts = len(prompt_results)
         total_queries = sum(len(queries) for queries in prompt_results.values())
@@ -76,46 +70,98 @@ def main():
         # Calculate success rate for each prompt
         prompt_stats = {}
         for prompt_idx, queries in prompt_results.items():
+            # Sort queries by query_idx to ensure first query is at index 0
+            queries.sort(key=lambda x: x.get('query_idx', 0))
+            
+            # Get the problem type from the first query
+            problem_type = queries[0]['type'] if queries else 'Unknown'
+            
+            # Calculate pass@1 (using only first query)
+            pass_at_1 = queries[0]['is_equivalent'] if queries else False
+            
+            # Calculate pass@n (all queries must be equivalent)
+            pass_at_n = all(query['is_equivalent'] for query in queries)
+            
             successful_queries = sum(1 for query in queries if query['is_equivalent'])
             prompt_stats[f"prompt_{prompt_idx}"] = {
+                "problem_type": problem_type,
                 "total_queries": len(queries),
                 "successful_queries": successful_queries,
-                "success_rate": f"{(successful_queries/len(queries))*100:.1f}"
+                "success_rate": (successful_queries/len(queries))*100 if queries else 0,
+                "pass_at_1": pass_at_1,
+                "pass_at_n": pass_at_n
+            }
+
+        # Calculate overall pass@1 and pass@n rates
+        total_pass_at_1 = sum(1 for stats in prompt_stats.values() if stats["pass_at_1"])
+        total_pass_at_n = sum(1 for stats in prompt_stats.values() if stats["pass_at_n"])
+        overall_pass_at_1_rate = (total_pass_at_1 / total_prompts) * 100 if total_prompts > 0 else 0
+        overall_pass_at_n_rate = (total_pass_at_n / total_prompts) * 100 if total_prompts > 0 else 0
+
+        # Calculate success rates per question type
+        question_type_stats = defaultdict(lambda: {
+            "total": 0,
+            "successful": 0,
+            "total_prompts": 0,
+            "pass_at_1_prompts": 0,
+            "pass_at_n_prompts": 0
+        })
+        
+        # First pass: collect all queries and their success status
+        for queries in prompt_results.values():
+            # Sort queries by query_idx
+            queries.sort(key=lambda x: x.get('query_idx', 0))
+            
+            # Get the question type from the first query
+            if queries:
+                q_type = queries[0]['type']
+                question_type_stats[q_type]["total_prompts"] += 1
+                
+                # Check pass@1
+                if queries[0]['is_equivalent']:
+                    question_type_stats[q_type]["pass_at_1_prompts"] += 1
+                
+                # Check pass@n
+                if all(query['is_equivalent'] for query in queries):
+                    question_type_stats[q_type]["pass_at_n_prompts"] += 1
+                
+                # Count all queries
+                for query in queries:
+                    question_type_stats[q_type]["total"] += 1
+                    if query['is_equivalent']:
+                        question_type_stats[q_type]["successful"] += 1
+
+        # Convert question type stats to percentages
+        question_type_rates = {}
+        for q_type, stats in question_type_stats.items():
+            success_rate = (stats["successful"] / stats["total"]) * 100 if stats["total"] > 0 else 0
+            pass_at_1_rate = (stats["pass_at_1_prompts"] / stats["total_prompts"]) * 100 if stats["total_prompts"] > 0 else 0
+            pass_at_n_rate = (stats["pass_at_n_prompts"] / stats["total_prompts"]) * 100 if stats["total_prompts"] > 0 else 0
+            
+            question_type_rates[q_type] = {
+                "total_queries": stats["total"],
+                "successful_queries": stats["successful"],
+                "success_rate": success_rate,
+                "total_prompts": stats["total_prompts"],
+                "pass_at_1_rate": pass_at_1_rate,
+                "pass_at_n_rate": pass_at_n_rate
             }
 
         summary_stats[model_name] = {
             "total_prompts": total_prompts,
             "total_queries": total_queries,
             "total_successful_queries": total_successful_queries,
-            "overall_success_rate": f"{(total_successful_queries/total_queries)*100:.1f}%",
-            "prompt_breakdown": prompt_stats
+            "overall_success_rate": (total_successful_queries/total_queries)*100 if total_queries > 0 else 0,
+            "overall_pass_at_1_rate": overall_pass_at_1_rate,
+            "overall_pass_at_n_rate": overall_pass_at_n_rate,
+            "prompt_breakdown": prompt_stats,
+            "question_type_breakdown": question_type_rates
         }
 
     with open('results/summary.json', 'w') as f:
         json.dump(summary_stats, f, indent=4)
 
-    # Create pie chart of problem types
-    problem_types = defaultdict(int)
-    for result in results:
-        prob_type = result['type']
-        problem_types[prob_type] += 1
-
-    # Convert to percentages
-    total_problems = sum(problem_types.values())
-    problem_type_percentages = {k: (v/total_problems)*100 for k,v in problem_types.items()}
-
-    plt.figure(figsize=(10, 8))
-    plt.pie(problem_type_percentages.values(), 
-            labels=[t.replace('_', ' ').title() for t in problem_type_percentages.keys()],
-            autopct='%1.1f%%',
-            startangle=90)
-    plt.axis('equal')
-    plt.tight_layout(pad=1.5)  # Add padding around the plot
-    plt.savefig('results/problem_distribution.png', bbox_inches='tight')  # Save with tight bounding box
-    plt.close()
-
     print("Summary statistics saved as summary.json")
-    print("Problem distribution chart saved as problem_distribution.png")
 
 if __name__ == "__main__":
-    main()
+    generate_summary()
