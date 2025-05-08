@@ -94,7 +94,7 @@ sympy_functions = [
     'sinh', 'cosh', 'tanh', 'coth', 'sech', 'csch',
     'asin', 'acos', 'atan', 'acsc', 'asec', 'acot',
     'asinh', 'acosh', 'atanh', 'acoth', 'asech', 'acsch',
-    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs'
+    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs', 'max', 'min'
 ]
 
 # Define list of symbols that are multicharacter and should be handled by Sympy
