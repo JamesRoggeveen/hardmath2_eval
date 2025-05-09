@@ -166,12 +166,6 @@ def main():
     query_results = asyncio.run(bulk_query_with_progress([p[0] for p in prompt_tuples], selected_models))
     print(f"Number of query results: {len(query_results)}")
 
-    # Save query results to a JSON file
-    try:
-        with open("results/query_results.json", "w") as f:
-            json.dump(query_results, f, indent=2)
-    except Exception as e:
-        print(f"Error saving query results: {e}")
 
     # Update prompt_idx in results to match original indices and add query_idx
     updated_results = []
@@ -188,6 +182,22 @@ def main():
     
     print(f"Number of updated results: {len(updated_results)}")
 
+    try:
+        os.makedirs("results", exist_ok=True)
+        serializable_results = [
+            {
+                "prompt_idx": prompt_idx,
+                "query_idx": query_idx,
+                "model_name": model_name,
+                "response": response,
+                "error": error
+            }
+            for response, prompt_idx, model_name, error, query_idx in updated_results
+        ]
+        with open("results/query_results.json", "w") as f:
+            json.dump(serializable_results, f, indent=2)
+    except Exception as e:
+        print(f"Error saving query results: {e}")
     # Process results
     full_results, results = process_results(
         updated_results, 
