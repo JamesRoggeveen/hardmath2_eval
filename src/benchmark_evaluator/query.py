@@ -40,10 +40,10 @@ SUPPORTED_MODELS = SUPPORTED_MODELS_GEMINI | SUPPORTED_MODELS_OPENAI | SUPPORTED
 SYSTEM_INSTRUCTION = config["SYSTEM_INSTRUCTION"]
 
 # Semaphores to limit the number of concurrent requests
-openai_sem = asyncio.Semaphore(15)
-gemini_sem = asyncio.Semaphore(15)
-anthropic_sem = asyncio.Semaphore(15)
-deepseek_sem = asyncio.Semaphore(15)
+openai_sem = asyncio.Semaphore(5)
+gemini_sem = asyncio.Semaphore(5)
+anthropic_sem = asyncio.Semaphore(5)
+deepseek_sem = asyncio.Semaphore(5)
 
 def get_openai_client():
     """Initialize and return OpenAI client if not already initialized."""
