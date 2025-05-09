@@ -34,7 +34,15 @@ deletion_rules = [
     r"\\rangle",
     r"\\,",
     r"\\;",
-    r"~"
+    r"~",
+    r"\n",
+    r"\\!",
+    r"\\,",
+    r"\\displaystyle",
+    r"\\;",
+    r"\\:",
+    r"\\quad",
+    r"\\qquad"
 ]
 
 # Replace LaTeX formatting with expression formatting
@@ -45,6 +53,8 @@ replacement_rules = {
     r'\\}': r')',
     r'\[': r'(',
     r'\]': r')',
+    r'{-}': r'-',
+    r'{+}': r'+',
     r'\\lambda': r'\\lam'  # lambda is a reserved word in python and so needs to be replaced
 }
 
@@ -63,6 +73,9 @@ function_rules ={
 # Format nested LaTeX expressions by repeatedly evaluating rules, stopping when no changes are made
 nested_rules = {
     r'\\frac\{([^{}]*)\}\{([^{}]*)\}' : r'(\1)/(\2)',
+    r'\\dfrac\{([^{}]*)\}\{([^{}]*)\}' : r'(\1)/(\2)',
+    r'\\tfrac\{([^{}]*)\}\{([^{}]*)\}' : r'(\1)/(\2)',
+    r'\\tfrac(\d)(\d)': r'(\1)/(\2)',
     r'\\sqrt\[(.*?)\]\{([^{}]*)\}' : r'(\2)**(1/(\1))',
     r'\\sqrt\{([^{}]*)\}' : r'(\1)**(1/2)',
     r'\^\{([^{}]*)\}' : r'^(\1)',
@@ -94,7 +107,7 @@ sympy_functions = [
     'sinh', 'cosh', 'tanh', 'coth', 'sech', 'csch',
     'asin', 'acos', 'atan', 'acsc', 'asec', 'acot',
     'asinh', 'acosh', 'atanh', 'acoth', 'asech', 'acsch',
-    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs', 'max', 'min'
+    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs', 'max', 'min', 'airyai', 'Ai'
 ]
 
 # Define list of symbols that are multicharacter and should be handled by Sympy

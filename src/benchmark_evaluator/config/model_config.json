@@ -28,5 +28,5 @@
         "DeepSeek R1": "deepseek-reasoner",
         "DeepSeek v3": "deepseek-chat"
     },
-    "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables."
+    "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables. Do not include any other text besides the single solution in the $\\boxed{}$ environment, including information about the limits of variables or any Big O notation."
 }

@@ -5,7 +5,7 @@ import ast
 import itertools
 import numpy as np
 import argparse
-from typing import List, Tuple, Optional, Dict, Any, Union
+from typing import List, Tuple, Optional, Dict, Any, Union, Set
 from dataclasses import dataclass, field, asdict
 from benchmark_evaluator.parser_rules import deletion_rules, replacement_rules, function_rules, nested_rules, final_rules, known_functions, intermediate_functions, subsup_rewrite_pattern, subsup_pattern, sympy_symbols, beta_function_pattern, unicode_replacement_rules
 
@@ -142,9 +142,11 @@ def extract_solution(solution_string: str) -> List[str]:
         text_wrapper = re.match(r'^\s*\\text\{(.+)\}\s*$', solution_group, re.DOTALL)
         if text_wrapper:
             solution_group = text_wrapper.group(1).strip()
-            
+        solution_group = solution_group.strip('.,')
+        solution_group = re.sub(r"\\;", r"", solution_group)
         solution_list = solution_group.split(';')
-        solution_list = [s.strip() for s in solution_list]
+        solution_list = [s.split("\\quad")[0].strip(" \n.,") for s in solution_list]
+
         
         # Validate each solution part
         for i, part in enumerate(solution_list):
@@ -174,7 +176,7 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
         for pattern in deletion_rules:
             current_string = re.sub(pattern, "", current_string)
 
-        formatting_strings = ["text", "mathrm", "operatorname"]
+        formatting_strings = ["text", "mathrm", "operatorname", "displaystyle"]
         names = "|".join(map(re.escape, current_known_functions))
 
         for fmt in formatting_strings:
@@ -184,18 +186,21 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
             )
             current_string = pattern.sub(r'\1', current_string)
 
+        current_string = re.sub(r"Ai\((?P<content>[^)]+)\)", r"airyai(\g<content>)", current_string)
+
         beta_formatted_string = rewrite_beta_function(current_string)
         if beta_formatted_string != current_string:
             current_string = beta_formatted_string
             current_known_functions.append("betainc")
             current_known_functions.append("beta")
-        
+        current_string, new_vars = preprocess_super_and_sub(current_string)
+        for var in new_vars:
+            local_dict[var] = sp.Symbol(var)
+
         current_string, _integrals = shield_integrals(current_string,local_dict)
         if _integrals != {}:
             current_known_functions.append("integrate")
             current_known_functions.append("Integral")
-
-        current_string = preprocess_super_and_sub(current_string)
 
         # If J is a parameter, we need to surround it with spaces to prevent it from being parsed as an imaginary number.
         if "J" in local_dict.keys():
@@ -256,8 +261,7 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
         )
         current_string = lex_identifiers(current_string, TOKEN_RE)
 
-        for pattern, replacement in final_rules.items():
-            current_string = re.sub(pattern, replacement, current_string)
+        current_string = apply_final_rules(current_string, KNOWN_NAMES)
 
         current_string = re.sub(r'\\', ' ', current_string)
         current_string = re.sub(r'\s+', ' ', current_string)
@@ -267,12 +271,40 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
         # Final validation
         if not current_string.strip():
             raise LatexConversionError("Conversion resulted in empty string", latex_string)
-        return current_string
+        return current_string, local_dict
         
     except LatexConversionError:
         raise
     except Exception as e:
         raise LatexConversionError(f"Unexpected error during LaTeX conversion: {str(e)}", latex_string, None, e)
+
+def apply_final_rules(current_string: str, known_names: List[str]) -> str:
+    # 1) get all your var-names, longest first so "x_prime" splits before "x"
+    var_names = sorted(known_names, key=len, reverse=True)
+    if not var_names:
+        # no vars? do the naïve way
+        for pat, repl in final_rules.items():
+            current_string = re.sub(pat, repl, current_string)
+        return current_string
+
+    # 2) build a splitter that captures any of those var-names
+    splitter = re.compile(
+        "(" + "|".join(re.escape(v) for v in var_names) + ")"
+    )
+
+    # 3) split into: [ chunk, var, chunk, var, chunk, ... ]
+    parts = splitter.split(current_string)
+
+    # 4) only apply your rules on the non-var chunks
+    for i, part in enumerate(parts):
+        if part in known_names:
+            continue  # skip your known variables entirely
+        for pat, repl in final_rules.items():
+            part = re.sub(pat, repl, part)
+        parts[i] = part
+
+    # 5) re-join and return
+    return "".join(parts)
 
 def encode_frac_powers(s: str):
     """
@@ -369,15 +401,15 @@ def _parse_braces(s: str, j: int) -> Tuple[str,int]:
 def normalize_limit(lim: str) -> str:
     """Turn LaTeX infinities into Sympy oo notation."""
     t = lim.strip()
-    if t in (r'\infty', 'infty'):
+    if t in (r'\infty', 'infty', r'{\infty}'):
         return 'oo'
-    if t in (r'-\infty', '-infty'):
+    if t in (r'-\infty', '-infty', r'{-\infty}'):
         return '-oo'
     return t
 
 def shield_integrals(s: str, local_dict: Dict[str, sp.Symbol]={}) -> Tuple[str, Dict[str,str]]:
     """
-    Recursively find the rightmost `int_… dvar`, replace it with
+    Recursively find the rightmost 'int_… dvar`, replace it with
     a placeholder <INT#>…<INT#>, and collect a template for each
     placeholder.  Inner integrals get shielded first.
     """
@@ -477,8 +509,8 @@ def shield_integrals(s: str, local_dict: Dict[str, sp.Symbol]={}) -> Tuple[str, 
             body = expr[start_body:end_body]
 
         # 6) build Sympy limits
-        lo = normalize_limit(raw_lo) if r'\infty' in raw_lo else latex_to_expression(raw_lo, local_dict)
-        hi = normalize_limit(raw_hi) if r'\infty' in raw_hi else latex_to_expression(raw_hi, local_dict)
+        lo = normalize_limit(raw_lo) if r'\infty' in raw_lo else latex_to_expression(raw_lo, local_dict)[0]
+        hi = normalize_limit(raw_hi) if r'\infty' in raw_hi else latex_to_expression(raw_hi, local_dict)[0]
 
         # 7) record template + placeholder
         template = f"Integral({{EXPR}},({var},{lo},{hi}))"
@@ -535,42 +567,51 @@ def lex_identifiers(s: str, TOKEN_RE: re.Pattern) -> str:
 
 def rewrite_super_and_sub(m):
     base = m.group('base')
-    mods = m.group('mods')
+    if base.lstrip('\\') == 'int':   # skip any \int
+        return m.group(0)
 
+    mods = m.group('mods')
     raw_subs = []
     raw_sups = []
     raw_exps = []
 
     for gm in subsup_pattern.finditer(mods):
-        if gm.group(1):  # apostrophes
+        # apostrophes → primes
+        if gm.group(1):
             raw_sups.extend(['prime'] * len(gm.group(1)))
-        elif gm.group(2):  # braced subscript {…}
-            # split on commas and strip any backslash
+
+        # subscript branches (no recursion)
+        elif gm.group(2):
             for part in re.split(r'\s*,\s*', gm.group(2)):
                 raw_subs.append(part.lstrip('\\'))
-        elif gm.group(3) or gm.group(4):  # single‐token subscript
-            tok = (gm.group(3) or gm.group(4)).lstrip('\\')
-            raw_subs.append(tok)
-        elif gm.group(5) or gm.group(6):  # allowed superscripts
+        elif gm.group(3):
+            raw_subs.append(gm.group(3).lstrip('\\'))
+        elif gm.group(4):
+            raw_subs.append(gm.group(4).lstrip('\\'))
+
+        # allowed‐letter superscripts → recurse
+        elif gm.group(5) or gm.group(6):
             tok = (gm.group(5) or gm.group(6)).lstrip('\\')
+            tok = subsup_rewrite_pattern.sub(rewrite_super_and_sub, tok)
             raw_sups.append(tok)
-        else:  # generic exponent
+
+        # generic exponent → recurse
+        else:
             tok = (gm.group(7) or gm.group(8))
+            tok = subsup_rewrite_pattern.sub(rewrite_super_and_sub, tok)
             raw_exps.append(tok)
 
-    # 4. Deduplicate subscripts (keep first seen)
+    # dedupe
     subs_unique = []
     for tok in raw_subs:
         if tok not in subs_unique:
             subs_unique.append(tok)
-
-    # 5. Deduplicate superscripts except allow repeated ‘prime’
     sups_unique = []
     for tok in raw_sups:
         if tok == 'prime' or tok not in sups_unique:
             sups_unique.append(tok)
 
-    # 6. Reassemble: subscripts, allowed sups, then exponents
+    # reassemble
     name = base
     for tok in subs_unique:
         name += f"_{tok}"
@@ -579,11 +620,27 @@ def rewrite_super_and_sub(m):
     for tok in raw_exps:
         name += f"^{{{tok}}}"
 
+    # --- record if we actually flattened something ---
+    var_part = name.split('^', 1)[0]
+    if var_part != base:
+        rewrite_super_and_sub.introduced_vars.add(var_part)
+
     return name
 
-def preprocess_super_and_sub(s: str) -> str:
+rewrite_super_and_sub.introduced_vars = set()
+
+def preprocess_super_and_sub(s: str) -> Tuple[str, Set[str]]:
+    # clear the recorder
+    rewrite_super_and_sub.introduced_vars.clear()
+
+    # run your full rewrite (all recursion inside rewrite_super_and_sub
+    # now also records anything it introduces)
     new_string = subsup_rewrite_pattern.sub(rewrite_super_and_sub, s)
-    return normalize_backslashes(new_string).strip()
+    new_string = normalize_backslashes(new_string).strip()
+
+    # grab whatever got recorded
+    new_vars = set(rewrite_super_and_sub.introduced_vars)
+    return new_string, new_vars
 
 def string_permutations(templates: List[str],
                         index_rules: Dict[str, List[str]]
@@ -657,10 +714,10 @@ def extract_symbol_and_nc_lists(function_str: str):
 
     # 4) **Normalize backslashes**, then canonicalize
     normalized = [normalize_backslashes(f) for f in raw_funcs]
-    can_funcs  = [preprocess_super_and_sub(f) for f in normalized]
+    can_funcs  = [preprocess_super_and_sub(f)[0] for f in normalized]
 
     normalized_nc = [normalize_backslashes(f) for f in nc_raw]
-    can_nc        = [preprocess_super_and_sub(f) for f in normalized_nc]
+    can_nc        = [preprocess_super_and_sub(f)[0] for f in normalized_nc]
     # 5) Expand every canonical template against the index_rules
     all_funcs = string_permutations(can_funcs, index_rules)
     nc_funcs  = string_permutations(can_nc, index_rules)
@@ -750,7 +807,11 @@ def solution_to_sympy(solution_string: str, parameter_str: str = "", function_st
         result.function_dict = parse_functions(function_str)
         local_dict = {**result.parameter_dict, **result.function_dict}
         # 2. Convert LaTeX to standard expressions
-        result.intermediate_expressions = [latex_to_expression(s, local_dict=local_dict) for s in result.extracted_solutions]
+        result.intermediate_expressions = []
+        for s in result.extracted_solutions:
+            latex_expr, new_vars = latex_to_expression(s, local_dict=local_dict)
+            result.intermediate_expressions.append(latex_expr)
+            local_dict = local_dict | new_vars
         
         # 4. Convert to SymPy expressions
         result.sympy_expressions = [expression_to_sympy(s, local_dict) 
