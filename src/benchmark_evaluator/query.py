@@ -88,6 +88,7 @@ def get_deepseek_client():
 async def query_openai_async(client, prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking OpenAI chat completion."""
     model_id = SUPPORTED_MODELS_OPENAI[model_name]
+    print(f"Querying {model_name} with prompt {idx}", flush=True)
     try:
         system_messages = [
             {"role": "system", "content": SYSTEM_INSTRUCTION}
@@ -103,6 +104,7 @@ async def query_openai_async(client, prompt: str, model_name: str, idx: int = 0)
 async def query_gemini_async(client,prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking Gemini generation via new GenAI SDK."""
     model_id = SUPPORTED_MODELS_GEMINI[model_name]
+    print(f"Querying {model_name} with prompt {idx}", flush=True)
     try:
         client = get_gemini_client()
         resp = await client.aio.models.generate_content(
@@ -119,6 +121,7 @@ async def query_gemini_async(client,prompt: str, model_name: str, idx: int = 0) 
 async def query_anthropic_async(client, prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     """Non-blocking Anthropic chat completion."""
     model_id = SUPPORTED_MODELS_ANTHROPIC[model_name]
+    print(f"Querying {model_name} with prompt {idx}", flush=True)
     try:
         response = await client.messages.create(
             model=model_id,
@@ -133,7 +136,6 @@ async def query_anthropic_async(client, prompt: str, model_name: str, idx: int =
         return f"Error querying {model_name}: {e}", idx, model_name, True
 
 async def query_llm_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
-    print(f"Querying {model_name} with prompt {idx}", flush=True)
     if model_name in SUPPORTED_MODELS_OPENAI:
         client = get_openai_client()
         async with openai_sem:
