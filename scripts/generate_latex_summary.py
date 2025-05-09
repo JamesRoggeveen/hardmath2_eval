@@ -46,15 +46,15 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     latex += "\\textbf{Type} & \\textbf{Prompt} & " + " & ".join(f"\\textbf{{{label}}}" for label in model_labels.values()) + " \\\\\n"
     latex += "\\hline\n"
     
-    # Get all prompts from the first model's prompt_breakdown
-    first_model = models[0]
-    prompt_entries = []
-    for prompt_key, prompt_stats in summary_stats[first_model]["prompt_breakdown"].items():
-        prompt_idx = int(prompt_key.split('_')[1])  # Extract number from "prompt_X"
-        prompt_entries.append((prompt_stats["problem_type"], prompt_idx))
+    # Get all prompts from all models' prompt_breakdown
+    prompt_entries = set()
+    for model in models:
+        for prompt_key, prompt_stats in summary_stats[model]["prompt_breakdown"].items():
+            prompt_idx = int(prompt_key.split('_')[1])  # Extract number from "prompt_X"
+            prompt_entries.add((prompt_stats["problem_type"], prompt_idx))
     
-    # Sort by problem type and prompt index
-    prompt_entries.sort(key=lambda x: (x[0], x[1]))
+    # Convert to list and sort by problem type and prompt index
+    prompt_entries = sorted(list(prompt_entries), key=lambda x: (x[0], x[1]))
     
     # Generate rows for each prompt
     for problem_type, prompt_idx in prompt_entries:
@@ -278,7 +278,7 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
                     latex += "\\vspace{0.5em}\n\n"
                     
                     # Add full model response
-                    model_response = result.get('model_response', '')
+                    model_response = result["model_response"]
                     if model_response:
                         latex += "\\noindent\\textbf{{Full Model Response}}:\\par\n"
                         # Escape special LaTeX characters and preserve whitespace
@@ -290,7 +290,7 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
                         latex += f"\\noindent {model_response}\\par\n\\vspace{{1em}}\n\n"
                     
                     # Add model solution
-                    model_solution = result.get('model_latex_solution', [])
+                    model_solution = result["eval_result"].get("model", {}).get("extracted_solutions", [])
                     if model_solution:
                         latex += "\\noindent\\textbf{{Model Solution}}:\\par\n"
                         for solution in model_solution:
@@ -302,12 +302,11 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
                                 latex += "\\begin{equation*}\n"
                                 latex += solution + "\n"
                                 latex += "\\end{equation*}\n\n"
-                    
-                    # Add expected solution
-                    expected_solution = result.get('solution_latex', [])
-                    if expected_solution:
-                        latex += "\\noindent\\textbf{{Expected Solution}}:\\par\n"
-                        for solution in expected_solution:
+
+                    solution_latex = result["eval_result"]["solution"]["extracted_solutions"]
+                    if solution_latex:
+                        latex += "\\noindent\\textbf{{Solution}}:\\par\n"
+                        for solution in solution_latex:
                             # Clean up the solution and ensure it's properly formatted
                             solution = solution.strip()
                             if solution:
@@ -318,14 +317,20 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
                                 latex += "\\end{equation*}\n\n"
                     
                     # Add evaluation results
-                    model_eval = result.get('model_eval_result', [])
-                    solution_eval = result.get('solution_eval_result', [])
+                    model_eval = result["eval_result"].get("model", {}).get("evaluation_results", [])
+                    solution_eval = result["eval_result"].get("solution", {}).get("evaluation_results", [])
                     if model_eval and solution_eval:
                         latex += "\\noindent\\textbf{{Evaluation Results}}:\\par\n"
-                        # Escape any special characters in evaluation results
-                        model_eval = str(model_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
-                        solution_eval = str(solution_eval).replace('&', '\\&').replace('%', '\\%').replace('#', '\\#')
-                        latex += f"Model: {model_eval}, Expected: {solution_eval}\n\n"
+                        # Format evaluation results as a table
+                        latex += "\\begin{tabular}{ll}\n"
+                        latex += "\\hline\n"
+                        latex += "\\textbf{Model} & \\textbf{Expected} \\\\\n"
+                        latex += "\\hline\n"
+                        # Format each evaluation result
+                        for m_eval, s_eval in zip(model_eval, solution_eval):
+                            latex += f"{m_eval:.6f} & {s_eval:.6f} \\\\\n"
+                        latex += "\\hline\n"
+                        latex += "\\end{tabular}\n\n"
                     
                     # Add extra space between queries
                     latex += "\\vspace{0.5em}\n\n"
@@ -389,7 +394,7 @@ def generate_detailed_summary(results: List[Dict[str, Any]]) -> str:
                     latex += "\\vspace{0.5em}\n\n"
                     
                     # Add model solution
-                    model_solution = result.get('model_latex_solution', [])
+                    model_solution = result.get('model_solution_latex', [])
                     if model_solution:
                         latex += "\\noindent\\textbf{{Model Solution}}:\\par\n"
                         for solution in model_solution:

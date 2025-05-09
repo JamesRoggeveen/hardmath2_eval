@@ -22,6 +22,11 @@ def generate_summary():
     models = sorted(list(results_by_model.keys()))
     question_types = sorted(set(result['type'] for result in results))
 
+    # Get all unique prompt indices
+    all_prompt_indices = set()
+    for model_results in results_by_model.values():
+        all_prompt_indices.update(model_results.keys())
+
     # Calculate dataset distribution statistics - only count each unique problem once
     problem_types = defaultdict(int)
     seen_problems = set()  # Track unique problems by their prompt_idx
@@ -59,6 +64,24 @@ def generate_summary():
         }
     }
     
+    # Calculate evaluation success statistics per model
+    model_eval_stats = {}
+    for model_name, prompt_results in results_by_model.items():
+        total_queries = sum(len(queries) for queries in prompt_results.values())
+        total_eval_success = sum(
+            sum(1 for query in queries if query.get('eval_success', False))
+            for queries in prompt_results.values()
+        )
+        eval_success_rate = (total_eval_success / total_queries) * 100 if total_queries > 0 else 0
+        
+        model_eval_stats[model_name] = {
+            "total_queries": total_queries,
+            "total_eval_success": total_eval_success,
+            "eval_success_rate": eval_success_rate
+        }
+    
+    summary_stats["model_eval_stats"] = model_eval_stats
+    
     for model_name, prompt_results in results_by_model.items():
         total_prompts = len(prompt_results)
         total_queries = sum(len(queries) for queries in prompt_results.values())
@@ -69,28 +92,40 @@ def generate_summary():
         
         # Calculate success rate for each prompt
         prompt_stats = {}
-        for prompt_idx, queries in prompt_results.items():
-            # Sort queries by query_idx to ensure first query is at index 0
-            queries.sort(key=lambda x: x.get('query_idx', 0))
-            
-            # Get the problem type from the first query
-            problem_type = queries[0]['type'] if queries else 'Unknown'
-            
-            # Calculate pass@1 (using only first query)
-            pass_at_1 = queries[0]['is_equivalent'] if queries else False
-            
-            # Calculate pass@n (all queries must be equivalent)
-            pass_at_n = all(query['is_equivalent'] for query in queries)
-            
-            successful_queries = sum(1 for query in queries if query['is_equivalent'])
-            prompt_stats[f"prompt_{prompt_idx}"] = {
-                "problem_type": problem_type,
-                "total_queries": len(queries),
-                "successful_queries": successful_queries,
-                "success_rate": (successful_queries/len(queries))*100 if queries else 0,
-                "pass_at_1": pass_at_1,
-                "pass_at_n": pass_at_n
-            }
+        for prompt_idx in all_prompt_indices:  # Use all prompt indices
+            if prompt_idx in prompt_results:
+                queries = prompt_results[prompt_idx]
+                # Sort queries by query_idx to ensure first query is at index 0
+                queries.sort(key=lambda x: x.get('query_idx', 0))
+                
+                # Get the problem type from the first query
+                problem_type = queries[0]['type'] if queries else 'Unknown'
+                
+                # Calculate pass@1 (using only first query)
+                pass_at_1 = queries[0]['is_equivalent'] if queries else False
+                
+                # Calculate pass@n (all queries must be equivalent)
+                pass_at_n = all(query['is_equivalent'] for query in queries)
+                
+                successful_queries = sum(1 for query in queries if query['is_equivalent'])
+                prompt_stats[f"prompt_{prompt_idx}"] = {
+                    "problem_type": problem_type,
+                    "total_queries": len(queries),
+                    "successful_queries": successful_queries,
+                    "success_rate": (successful_queries/len(queries))*100 if queries else 0,
+                    "pass_at_1": pass_at_1,
+                    "pass_at_n": pass_at_n
+                }
+            else:
+                # For prompts that this model hasn't run, add an entry with 0 success
+                prompt_stats[f"prompt_{prompt_idx}"] = {
+                    "problem_type": "Unknown",  # We don't know the type since it wasn't run
+                    "total_queries": 0,
+                    "successful_queries": 0,
+                    "success_rate": 0,
+                    "pass_at_1": False,
+                    "pass_at_n": False
+                }
 
         # Calculate overall pass@1 and pass@n rates
         total_pass_at_1 = sum(1 for stats in prompt_stats.values() if stats["pass_at_1"])

@@ -99,7 +99,7 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     # Process each result
     for response, prompt_idx, model_name, error, query_idx in query_results:
         if error:
-            print(f"Error querying {model_name} for prompt {prompt_idx} (query {query_idx}): {error}")
+            print(f"Error querying {model_name} for prompt {prompt_idx} (query {query_idx}): {response}")
             continue
             
         eval_result = evaluate_solution(response, solution_list[prompt_idx], parameter_list[prompt_idx])
