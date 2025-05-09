@@ -133,6 +133,7 @@ async def query_anthropic_async(client, prompt: str, model_name: str, idx: int =
         return f"Error querying {model_name}: {e}", idx, model_name, True
 
 async def query_llm_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
+    print(f"Querying {model_name} with prompt {idx}", flush=True)
     if model_name in SUPPORTED_MODELS_OPENAI:
         client = get_openai_client()
         async with openai_sem:
@@ -170,7 +171,7 @@ async def bulk_query_with_progress(prompts: List[str], models: List[str]):
         results.append(res)
     elapsed = time.perf_counter() - start
 
-    print(f"\n✅ All {len(tasks)} requests completed in {elapsed:.2f}s")
+    print(f"\n✅ All {len(tasks)} requests completed in {elapsed:.2f}s", flush=True)
 
     # Build a lookup for model ordering
     model_order = {model: idx for idx, model in enumerate(models)}

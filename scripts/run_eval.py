@@ -145,8 +145,8 @@ def main():
     
     # Get number of queries per prompt from config, default to 1
     num_queries = config.get('num_queries', 1)
-    print(f"Running evaluation with models: {selected_models}")
-    print(f"Number of queries per prompt: {num_queries}")
+    print(f"Running evaluation with models: {selected_models}", flush=True)
+    print(f"Number of queries per prompt: {num_queries}", flush=True)
     
     dataset = load_dataset(HUGGINGFACE_DATASET_NAME, split="train")
 
@@ -164,7 +164,7 @@ def main():
 
     # Run queries with repeated prompts
     query_results = asyncio.run(bulk_query_with_progress([p[0] for p in prompt_tuples], selected_models))
-    print(f"Number of query results: {len(query_results)}")
+    print(f"Number of query results: {len(query_results)}", flush=True)
 
 
     # Update prompt_idx in results to match original indices and add query_idx
@@ -180,7 +180,7 @@ def main():
         if not error:
             log_prompt(prompt_list[prompt_idx], model_name, query_idx)
     
-    print(f"Number of updated results: {len(updated_results)}")
+    print(f"Number of updated results: {len(updated_results)}", flush=True)
 
     try:
         os.makedirs("results", exist_ok=True)
@@ -197,7 +197,7 @@ def main():
         with open("results/query_results.json", "w") as f:
             json.dump(serializable_results, f, indent=2)
     except Exception as e:
-        print(f"Error saving query results: {e}")
+        print(f"Error saving query results: {e}", flush=True)
     # Process results
     full_results, results = process_results(
         updated_results, 
@@ -218,8 +218,8 @@ def main():
     with open("results/results.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"Saved {len(results)} results to results.json")
-    print(f"Saved {len(full_results)} results to full_results.json")
+    print(f"Saved {len(results)} results to results.json", flush=True)
+    print(f"Saved {len(full_results)} results to full_results.json", flush=True)
 
 if __name__ == "__main__":
     main()
