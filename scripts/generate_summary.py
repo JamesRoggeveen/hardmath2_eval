@@ -1,14 +1,19 @@
 import json
 import os
 import sys
+import argparse
 project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 from typing import Dict, Any, List
 import re
 from collections import defaultdict
 
-def generate_summary():
-    with open('results/results.json', 'r') as f:
+def generate_summary(results_dir):
+    # Define input and output file paths
+    results_file = os.path.join(results_dir, 'results.json')
+    summary_file = os.path.join(results_dir, 'summary.json')
+    
+    with open(results_file, 'r') as f:
         results = json.load(f)
 
     # Group results by model name and prompt_idx
@@ -193,10 +198,15 @@ def generate_summary():
             "question_type_breakdown": question_type_rates
         }
 
-    with open('results/summary.json', 'w') as f:
+    with open(summary_file, 'w') as f:
         json.dump(summary_stats, f, indent=4)
 
-    print("Summary statistics saved as summary.json")
+    print(f"Summary statistics saved as {summary_file}")
 
 if __name__ == "__main__":
-    generate_summary()
+    parser = argparse.ArgumentParser(description="Generate summary statistics from evaluation results")
+    parser.add_argument("--results-dir", type=str, default="results", 
+                        help="Directory containing results.json and where summary.json will be saved")
+    args = parser.parse_args()
+    
+    generate_summary(args.results_dir)
