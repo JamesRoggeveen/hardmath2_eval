@@ -223,26 +223,33 @@ def latex_to_expression(latex_string: str, local_dict: Dict[str, Union[sp.Symbol
                 break
         
         # Add additional space before known functions to prevent them from being parsed as variables (i.e. x\ln(x) -> x \ln(x))    
+        current_known_functions = sorted(current_known_functions, key = len, reverse=True)
         pattern = re.compile(
-            r'(?<![A-Za-z])\\?('
+            r'(?<![A-Za-z])?\\?('
             + '|'.join(map(re.escape, current_known_functions))
             + r')(?![A-Za-z])'
         )
-
         # 3. Replace with " space + the bare function name "
         current_string = pattern.sub(r' \1', current_string)
-
-        # 3) Replace with “ space + the bare function name ”
-        current_string = pattern.sub(r' \1', current_string)
+        if len(intermediat_funcs_list) != 0:
+            pattern = re.compile(r'('+'|'.join(map(re.escape,intermediat_funcs_list))+ r')([a-zA-z\d])')
+            current_string = pattern.sub(r'\1 \2', current_string)
+        funcs = '|'.join(map(re.escape, current_known_functions))
         pattern = re.compile(
-            r'(?:\\)?'                                 # optional backslash
-            r'(' + '|'.join(map(re.escape, current_known_functions)) + r')'# the function (or placeholder)
-            r'(?!\w)'                                  # not followed by letter/digit/_
-            r'\s+'                                     # **ONE OR MORE** spaces
-            r'([^{}\s()+\-*/^]+)'                      # the bare argument
+            rf'((?:\\)?(?:{funcs}))(?![A-Za-z_])\s*'            # group1 = \?func, no letter/_, optional space
+            rf'(?:\\?\{{([^\\}}]+?)\\?\}}'                     #   OR brace‐delimited → group2
+            r'|\[([^\]]+?)\]'                                  #   OR bracket‐delimited → group3
+            r'|([^{}\[\]\s()+\-*/^]+))'                        #   OR bare‐arg → group4
         )
 
-        current_string = pattern.sub(r'\1(\2)', current_string)
+        def add_parens(s: str) -> str:
+            def _repl(m: re.Match) -> str:
+                fn  = m.group(1)
+                # whichever group matched: braces (2), brackets (3), or bare (4)
+                arg = m.group(2) or m.group(3) or m.group(4)
+                return f"{fn}({arg})"
+            return pattern.sub(_repl, s)
+        current_string = add_parens(current_string)
 
         current_string = decode_frac_powers(current_string)
         for pattern, replacement in replacement_rules.items():
