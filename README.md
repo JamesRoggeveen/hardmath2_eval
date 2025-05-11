@@ -24,11 +24,21 @@ To run the evaluation, in the main directory run
 ```
 python scripts/run_eval.py
 ```
+
+A smaller subset of problems can also be run for testing (e.g., first 3 problems using)
+```
+python scripts/run_eval.py --limit 3
+```
+
 The complete results are saved in `results/full_results.json` while `results/results.json` has an abbreviated results that removes the prompt and does not save intermediate Sympy expressions within the `EvaluationResult` framework.
 
 Once the evaluation is complete, you may run
 ```
 python scripts/generate_summary.py
+```
+or also specify a specific results directory like this:
+```
+python scripts/generate_summary.py --results-dir results_claude_test
 ```
 to generate summary statistics in `summary.json` and to generate figures summarizing the results.
 
@@ -37,3 +47,9 @@ You may also run
 python scripts/generate_latex_summary.py
 ```
 to generate two `.tex` files, `llm_summary.tex` which contains a summary of the LLM solutions and expected solutions as well as `llm_full_results.tex` which gives the full model response to the question.
+
+There is also a file called generate_latex_table.py that allows you to just create the eval tables.
+We can again specify which directory by running
+```
+python scripts/generate_latex_table.py --results-dir results_claude_test
+```
