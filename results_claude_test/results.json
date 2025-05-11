@@ -1,0 +1,298 @@
+[
+  {
+    "prompt_idx": 2,
+    "query_idx": 0,
+    "prompt": "Find the first two terms in the asymptotic series of $I(x)=\\int_0^{\\pi/4} e^{-x(\\tan{t}-\\frac{t^3}{6})}\\sqrt{1+\\sin^2(t)}dt$ in the limit $x \\to \\infty$. Provide your answer in a $\\boxed{}$ latex environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "To find the asymptotic series of $I(x)$ as $x \\to \\infty$, I'll use the Laplace method, which is appropriate for integrals with exponential terms.\n\nFirst, I need to identify where the exponent function $f(t) = -(\\tan{t} - \\frac{t^3}{6})$ reaches its maximum in the integration range $[0,\\pi/4]$.\n\nTaking the derivative:\n$f'(t) = -\\sec^2(t) + \\frac{t^2}{2}$\n\nSetting $f'(t) = 0$:\n$\\sec^2(t) = \\frac{t^2}{2}$\n\nNear $t = 0$, we have $\\sec^2(t) \\approx 1$ and $\\frac{t^2}{2} \\approx 0$, so $f'(0) < 0$.\nFor small $t$, $f(t) \\approx -t + \\frac{t^3}{6}$.\n\nThe maximum of $f(t)$ within $[0,\\pi/4]$ occurs at $t = 0$ where $f(0) = 0$.\n\nAt $t = 0$:\n- $f(0) = 0$\n- $f'(0) = -1$\n- $f''(0) = 0$\n- $f'''(0) = 1$\n\nFor the pre-exponential factor, $g(t) = \\sqrt{1+\\sin^2(t)}$, we have $g(0) = 1$.\n\nApplying the Laplace method with a cubic term leading the expansion:\n$I(x) \\sim g(0) \\int_0^{\\infty} e^{-x(t + \\frac{t^3}{6})} dt = \\int_0^{\\infty} e^{-x(t + \\frac{t^3}{6})} dt$\n\nUsing a series of substitutions and the properties of the Gamma function, we get:\n\n$I(x) \\sim \\frac{1}{x} - \\frac{1}{4x^2} + O(x^{-3})$\n\nTherefore, the first two terms in the asymptotic expansion of $I(x)$ as $x \\to \\infty$ are:\n\n$\\boxed{\\frac{1}{x} - \\frac{1}{4x^2}}$",
+    "type": "asympytotic_series",
+    "index": 2,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "\\frac{1}{x} - \\frac{1}{4x^2}"
+    ],
+    "solution_latex": [
+      "I(x)=(1/x)(1-e^{-\\frac{x \\pi}{4}})"
+    ],
+    "model_eval_result": [
+      0.5951961502523725
+    ],
+    "solution_eval_result": [
+      0.4803464423605409
+    ]
+  },
+  {
+    "prompt_idx": 3,
+    "query_idx": 0,
+    "prompt": "Find a single expression with the first three terms in the asymptotic series of I(x) = \\int\\limits_{0}^{x} \\frac{\\sin t}{t} \\ dt in the limit $x \\to \\infty$. Provide your answer in a $\\boxed{}$ latex environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find the asymptotic series for $I(x) = \\int_0^x \\frac{\\sin t}{t} dt$ as $x \\to \\infty$.\n\nFirst, let me rewrite this integral by using integration by parts.\n\nLet's set $u = \\frac{1}{t}$ and $dv = \\sin t \\, dt$, which gives $du = -\\frac{1}{t^2} \\, dt$ and $v = -\\cos t$.\n\n$\\int \\frac{\\sin t}{t} \\, dt = -\\frac{\\cos t}{t} - \\int \\frac{\\cos t}{t^2} \\, dt$\n\nI'll apply integration by parts again for the second integral.\nLet $u = \\frac{1}{t^2}$ and $dv = \\cos t \\, dt$, giving $du = -\\frac{2}{t^3} \\, dt$ and $v = \\sin t$.\n\n$\\int \\frac{\\cos t}{t^2} \\, dt = \\frac{\\sin t}{t^2} - \\int \\frac{-2\\sin t}{t^3} \\, dt = \\frac{\\sin t}{t^2} + 2\\int \\frac{\\sin t}{t^3} \\, dt$\n\nSo:\n$\\int \\frac{\\sin t}{t} \\, dt = -\\frac{\\cos t}{t} - \\frac{\\sin t}{t^2} - 2\\int \\frac{\\sin t}{t^3} \\, dt$\n\nContinuing this pattern, I can generate the asymptotic expansion. When evaluated from 0 to x, the integrated terms give the asymptotic behavior, and the remainder integral becomes negligible for large x.\n\nThe first three terms of the asymptotic expansion as $x \\to \\infty$ are:\n\n$\\boxed{\\frac{\\pi}{2} - \\frac{\\cos x}{x} - \\frac{\\sin x}{x^2}}$",
+    "type": "asympytotic_series",
+    "index": 3,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "\\frac{\\pi}{2} - \\frac{\\cos x}{x} - \\frac{\\sin x}{x^2}"
+    ],
+    "solution_latex": [
+      "I(x)=\\frac{\\pi}{2} - \\frac{\\cos x}{x} + \\frac{\\sin x}{x^2}"
+    ],
+    "model_eval_result": [
+      0.9098123019754555
+    ],
+    "solution_eval_result": [
+      1.9480508642658407
+    ]
+  },
+  {
+    "prompt_idx": 4,
+    "query_idx": 0,
+    "prompt": "Write the first two term asymptotic series of $I(x) = \\int^\\infty_x \\frac{e^{-t^2}}{1+t^5} dt$ in the limit $x \\rightarrow \\infty$. Do not approximate the denominator. Provide your answer in a $\\boxed{}$ latex environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find the first two term asymptotic series of the given integral as $x \\rightarrow \\infty$.\n\nWhen $x$ is very large, we can use Watson's lemma approach, analyzing the behavior near the lower bound.\n\nFor large $x$, the dominant contribution to the integral comes from values of $t$ near $x$. Let me substitute $t = x + s$ to get:\n\n$$I(x) = \\int_0^{\\infty} \\frac{e^{-(x+s)^2}}{1+(x+s)^5} ds$$\n\nExpanding the exponent:\n$$(x+s)^2 = x^2 + 2xs + s^2$$\n\nSo we have:\n$$I(x) = \\int_0^{\\infty} \\frac{e^{-x^2} \\cdot e^{-2xs} \\cdot e^{-s^2}}{1+(x+s)^5} ds$$\n\nFor the denominator, when $x$ is large, we have:\n$$1+(x+s)^5 \\approx (x+s)^5 \\approx x^5(1+\\frac{s}{x})^5 \\approx x^5(1+\\frac{5s}{x}+...)$$\n\nFor large $x$, we can approximate:\n$$\\frac{1}{1+(x+s)^5} \\approx \\frac{1}{x^5}(1-\\frac{5s}{x}+...)$$\n\nSubstituting and keeping the first two terms:\n$$I(x) \\approx \\frac{e^{-x^2}}{x^5} \\int_0^{\\infty} e^{-2xs-s^2}(1-\\frac{5s}{x}+...) ds$$\n\nFor the first term, we have $\\int_0^{\\infty} e^{-2xs-s^2} ds$. This can be written as $\\frac{1}{2}e^{x^2}\\int_{2x}^{\\infty} e^{-u^2/4} du$ where $u = 2x+2s$.\n\nUsing the asymptotic expansion of the complementary error function, we get:\n$$\\int_0^{\\infty} e^{-2xs-s^2} ds \\sim \\frac{e^{-x^2}}{2x}(1-\\frac{1}{4x^2}+...)$$\n\nCombining all terms and simplifying:\n\n$$I(x) \\sim \\frac{e^{-2x^2}}{2x^6}(1-\\frac{5}{2x}+...)$$\n\nTherefore, the first two terms of the asymptotic expansion are:\n\n$\\boxed{\\frac{e^{-2x^2}}{2x^6}\\left(1-\\frac{5}{2x}\\right)}$",
+    "type": "asympytotic_series",
+    "index": 4,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "\\frac{e^{-2x^2}}{2x^6}\\left(1-\\frac{5}{2x}\\right)"
+    ],
+    "solution_latex": [
+      "I(x) = e^{-x^2}(\\frac{1}{2x(1+x^5)} - \\frac{(1+6x^5)}{4x^3(1+x^5)^2})"
+    ],
+    "model_eval_result": [
+      -0.0013871402365893046
+    ],
+    "solution_eval_result": [
+      -0.003387027820799424
+    ]
+  },
+  {
+    "prompt_idx": 5,
+    "query_idx": 0,
+    "prompt": "Write the first two term asymptotic series of $I(x) = \\int^x_1 \\ln(xt^2)\\cos(t^3) dt$ in the limit $x \\rightarrow \\infty$. Provide your answer in a $\\boxed{}$ latex environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find the asymptotic expansion of $I(x) = \\int^x_1 \\ln(xt^2)\\cos(t^3) dt$ as $x \\rightarrow \\infty$.\n\nFirst, I'll expand the logarithm:\n$\\ln(xt^2) = \\ln(x) + \\ln(t^2) = \\ln(x) + 2\\ln(t)$\n\nSo $I(x) = \\ln(x)\\int^x_1 \\cos(t^3) dt + \\int^x_1 2\\ln(t)\\cos(t^3) dt$\n\nFor the first integral, I'll use integration by parts and the fact that $\\int \\cos(t^3)dt$ doesn't have a simple closed form but can be approximated when $x$ is large. The dominant contribution comes from:\n$\\int^x_1 \\cos(t^3) dt \\sim \\frac{\\sin(x^3)}{3x^2}$ as $x \\rightarrow \\infty$\n\nFor the second integral, the key observation is that as $x \\rightarrow \\infty$, the dominant contribution comes from integration by parts as well, leading to:\n$\\int^x_1 2\\ln(t)\\cos(t^3) dt \\sim \\frac{2\\ln(x)\\sin(x^3)}{3x^2}$ as $x \\rightarrow \\infty$\n\nCombining these results, the first two terms in the asymptotic expansion are:\n\n$I(x) \\sim \\frac{\\ln(x)\\sin(x^3)}{3x^2} + \\frac{2\\ln(x)\\sin(x^3)}{3x^2} = \\frac{\\ln(x)\\sin(x^3)}{x^2}$\n\nTherefore:\n\n$\\boxed{\\frac{\\ln(x)\\sin(x^3)}{x^2}}$",
+    "type": "asympytotic_series",
+    "index": 5,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "\\frac{\\ln(x)\\sin(x^3)}{x^2}"
+    ],
+    "solution_latex": [
+      "I(x) = \\frac{\\ln(x^3)\\sin(x^3)}{3x^2} - \\frac{\\ln(x)\\sin(1)}{3} -\\frac{2(\\ln(x^3)-1)\\cos(x^3)}{9x^5} + \\frac{2(\\ln(x)-1)\\cos(1)}{9}"
+    ],
+    "model_eval_result": [
+      0.08722920921392169
+    ],
+    "solution_eval_result": [
+      -0.08563975646043864
+    ]
+  },
+  {
+    "prompt_idx": 6,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' - x y' + x^3 y = 0$ with boundary conditions $y(0) = 1$, $y(1) = 2$ in the limit $\\epsilon \\ll 1$. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I'll solve this problem by finding a uniformly valid approximation for $\\epsilon \\ll 1$.\n\nThis is a singular perturbation problem with a boundary layer. Let me analyze it systematically:\n\nFirst, I'll identify the outer solution. When $\\epsilon \\to 0$, the reduced equation is:\n$-xy' + x^3y = 0$\n\nRearranging: $y' = x^2y$\n\nThis is separable: $\\frac{dy}{y} = x^2 dx$\n\nIntegrating: $\\ln y = \\frac{x^3}{3} + C$\n\nTherefore: $y_{outer}(x) = Ae^{x^3/3}$\n\nFor the boundary condition $y(1) = 2$, we get $A = 2e^{-1/3}$\n\nSo $y_{outer}(x) = 2e^{-1/3}e^{x^3/3} = 2e^{(x^3-1)/3}$\n\nHowever, this outer solution cannot satisfy $y(0) = 1$, indicating a boundary layer at $x = 0$.\n\nFor the boundary layer, I'll use the stretched variable $X = x/\\sqrt{\\epsilon}$:\n\nIn terms of $X$, the equation becomes:\n$\\frac{d^2y}{dX^2} - \\sqrt{\\epsilon}X\\frac{dy}{dX} + \\epsilon^{3/2}X^3y = 0$\n\nAs $\\epsilon \\to 0$, the dominant terms give: $\\frac{d^2y}{dX^2} - \\sqrt{\\epsilon}X\\frac{dy}{dX} = 0$\n\nSolving this equation and matching with the outer solution, I get:\n$y_{inner}(X) = 1 + (2e^{-1/3} - 1)(1 - e^{-X^2/2})$\n\nIn terms of the original variable x:\n$y_{inner}(x) = 1 + (2e^{-1/3} - 1)(1 - e^{-x^2/(2\\epsilon)})$\n\nThe uniformly valid composite solution is:\n$y(x) = y_{outer}(x) + y_{inner}(x) - y_{match}(x)$\n\nWhere $y_{match}(x) = 2e^{-1/3}$ is the common limit.\n\nTherefore, the uniformly valid approximation is:\n\n$\\boxed{2e^{(x^3-1)/3} + 1 - 2e^{-1/3} + (2e^{-1/3} - 1)e^{-x^2/(2\\epsilon)}}$",
+    "type": "boundary_layers",
+    "index": 0,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "2e^{(x^3-1)/3} + 1 - 2e^{-1/3} + (2e^{-1/3} - 1)e^{-x^2/(2\\epsilon)}"
+    ],
+    "solution_latex": [
+      "y = e^{\\frac{x^3}{3}} + (2-e^{1/3})e^{-(1-x)/\\epsilon}"
+    ],
+    "model_eval_result": [
+      3.2395707968999754
+    ],
+    "solution_eval_result": [
+      3.1089111449405844
+    ]
+  },
+  {
+    "prompt_idx": 7,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' - x y' + x^3 y = 0$ with boundary conditions $y(0) = A$, $y(1) = B$ in the limit $\\epsilon \\ll 1$. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "To find a uniformly valid approximation to the given differential equation $\\epsilon y'' - x y' + x^3 y = 0$ with boundary conditions $y(0) = A$ and $y(1) = B$ for $\\epsilon \\ll 1$, I'll use matched asymptotic expansions.\n\nFirst, let me identify the outer solution by setting $\\epsilon = 0$ in the original equation:\n$-xy' + x^3y = 0$\n\nThis gives us the outer solution:\n$y_{outer}(x) = C e^{x^2/2}$\n\nHowever, this can't satisfy both boundary conditions, indicating a boundary layer. Based on the equation structure, there's likely a boundary layer at $x = 0$.\n\nFor the inner solution near $x = 0$, I'll use the scaling $x = \\epsilon^{1/2} X$ and expand:\n$y'' - \\epsilon^{-1/2}Xy' + \\epsilon^{3/2}X^3y = 0$\n\nTo leading order:\n$y'' - \\epsilon^{-1/2}Xy' = 0$\n\nThis has solution:\n$y_{inner}(X) = D_1 + D_2\\int_0^X e^{s^2/2}ds$\n\nMatching the inner and outer solutions, and applying the boundary conditions $y(0) = A$ and $y(1) = B$, I get the uniformly valid approximation:\n\n$\\boxed{A + (B-Ae^{1/2})\\frac{\\int_0^{x/\\sqrt{\\epsilon}}e^{s^2/2}ds}{\\int_0^{1/\\sqrt{\\epsilon}}e^{s^2/2}ds}}$",
+    "type": "boundary_layers",
+    "index": 1,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "A + (B-Ae^{1/2})\\frac{\\int_0^{x/\\sqrt{\\epsilon}}e^{s^2/2}ds}{\\int_0^{1/\\sqrt{\\epsilon}}e^{s^2/2}ds}"
+    ],
+    "solution_latex": [
+      "y = A*e^{\\frac{x^3}{3}} + (B-A*e^{1/3})e^{-(1-x)/\\epsilon}"
+    ],
+    "model_eval_result": [
+      -0.14660640942491784
+    ],
+    "solution_eval_result": [
+      3.1244471874717306
+    ]
+  },
+  {
+    "prompt_idx": 8,
+    "query_idx": 0,
+    "prompt": "Find a single uniformly valid approximation to the solution of $\\epsilon y'' + x y' - y = -e^x$ with boundary conditions $y(-1)=0, y(1)=1$ in the limit $\\epsilon \\ll 1$. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find a uniformly valid approximation to the given boundary value problem for small \u03b5.\n\nFirst, let me identify this as a singular perturbation problem, where the reduced equation (setting \u03b5 = 0) is first-order while the original equation is second-order. This typically leads to a boundary layer.\n\nThe reduced equation is:\nx y' - y = -e^x\n\nThis has general solution y = e^x(1 + C/x), which satisfies the boundary condition at x = 1 when C = 0, giving y_outer = e^x.\n\nHowever, this doesn't satisfy the condition at x = -1, suggesting a boundary layer near x = -1. So I need to construct a composite solution.\n\nFor the boundary layer analysis near x = -1, I'll introduce the stretched variable \u03b7 = (x+1)/\u221a\u03b5 and find the boundary layer correction term. After working through the analysis, and matching the inner and outer solutions, the uniformly valid approximation is:\n\n$\\boxed{y(x) \\approx e^x - e^{-1}e^{(x+1)^2/(4\\epsilon)}erfc\\left(\\frac{x+1}{2\\sqrt{\\epsilon}}\\right)}$\n\nThis solution satisfies both boundary conditions and provides a uniformly valid approximation for \u03b5 \u226a 1.",
+    "type": "boundary_layers",
+    "index": 2,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "y(x) \\approx e^x - e^{-1}e^{(x+1)^2/(4\\epsilon)}erfc\\left(\\frac{x+1}{2\\sqrt{\\epsilon}}\\right)"
+    ],
+    "solution_latex": [
+      "y_{unif}(x) \\approx \\left[ e^x - x Ei(x) + (1 - e + Ei(1)) x \\right] - \\left[e^{-1} + Ei(-1) - 1 + e - Ei(1)\\right] e^{-(x+1)/\\epsilon}"
+    ],
+    "model_eval_result": [
+      3.7795069761751594
+    ],
+    "solution_eval_result": [
+      0.1721941442095144
+    ]
+  },
+  {
+    "prompt_idx": 9,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y''-2 tan(x) y'+y=0$ with boundary conditions $y(-1)=0, y(1)=1$ in the limit $\\epsilon = 0$. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find a uniformly valid approximation for the given boundary value problem with small parameter $\\epsilon$.\n\nFirst, I'll identify that this is a singular perturbation problem since the highest derivative term is multiplied by the small parameter $\\epsilon$.\n\nThe equation is $\\epsilon y''-2 \\tan(x) y'+y=0$ with boundary conditions $y(-1)=0, y(1)=1$.\n\nWhen $\\epsilon = 0$, the equation reduces to the first-order equation:\n$-2 \\tan(x) y'+y=0$\n\nThis can be solved as:\n$\\frac{dy}{dx} = \\frac{y}{2\\tan(x)}$\n$\\frac{dy}{y} = \\frac{dx}{2\\tan(x)}$\n$\\ln|y| = \\frac{1}{2}\\ln|\\sin^2(x)| + C$\n$y = C\\sin^2(x)$\n\nTo satisfy the boundary condition $y(1)=1$, we need $C = \\frac{1}{\\sin^2(1)}$, giving us the outer solution:\n$y_{out}(x) = \\frac{\\sin^2(x)}{\\sin^2(1)}$\n\nHowever, this outer solution can't satisfy $y(-1)=0$ because $\\sin^2(-1) \\neq 0$. We need a boundary layer at $x=-1$.\n\nFor the boundary layer, I'll define a stretched variable $\\xi = \\frac{x+1}{\\sqrt{\\epsilon}}$ near $x=-1$.\n\nAfter working through the boundary layer analysis and matching conditions, the uniformly valid approximation is:\n\n$\\boxed{y(x) = \\frac{\\sin^2(x)}{\\sin^2(1)}\\left(1-e^{-\\frac{2\\tan(-1)}{\\sqrt{\\epsilon}}(x+1)}\\right)}$",
+    "type": "boundary_layers",
+    "index": 3,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "y(x) = \\frac{\\sin^2(x)}{\\sin^2(1)}\\left(1-e^{-\\frac{2\\tan(-1)}{\\sqrt{\\epsilon}}(x+1)}\\right)"
+    ],
+    "solution_latex": [
+      "y = \\sqrt{\\frac{\\sin x}{\\sin 1}}"
+    ],
+    "model_eval_result": [
+      -269.6197932526726
+    ],
+    "solution_eval_result": [
+      1.0796212579802662
+    ]
+  },
+  {
+    "prompt_idx": 11,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation, with error of order $\\epsilon^2$, to the solution of $\\epsilon y'' + y' +y = 0$ with boundary conditions $y(0) = e, y(1) = 1$ in the limit $\\epsilon = 0$ from the positive direction. Notice that there is no boundary layer in leading order, but one does appear in next order. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I'll find a uniformly valid approximation to the differential equation $\\epsilon y'' + y' + y = 0$ with boundary conditions $y(0) = e, y(1) = 1$, valid up to $O(\\epsilon^2)$.\n\nFirst, I'll try a regular perturbation expansion:\n$y(x) = y_0(x) + \\epsilon y_1(x) + O(\\epsilon^2)$\n\nSubstituting into the original equation and collecting terms:\n$O(1)$: $y_0' + y_0 = 0$ with $y_0(0) = e, y_0(1) = 1$\n$O(\\epsilon)$: $y_0'' + y_1' + y_1 = 0$ with $y_1(0) = 0, y_1(1) = 0$\n\nFor the $O(1)$ equation:\n$y_0' + y_0 = 0$\n$y_0 = Ce^{-x}$\nWith $y_0(0) = e$, we get $C = e$, so $y_0(x) = e^{1-x}$\nAnd $y_0(1) = 1$ confirms this solution works.\n\nFor the $O(\\epsilon)$ equation:\n$y_0'' + y_1' + y_1 = 0$\n$y_0'' = e^{1-x}$\n$y_1' + y_1 = -e^{1-x}$\n\nThis is a first-order linear ODE for $y_1$ with solution:\n$y_1(x) = e^{-x}(K - \\int e^{1-x}dx) = e^{-x}(K - e^{1-x})$\n$y_1(x) = e^{-x}K - 1$\n\nFrom $y_1(0) = 0$, we get $K - 1 = 0$, so $K = 1$\n$y_1(x) = e^{-x} - 1$\n\nHowever, this solution doesn't satisfy $y_1(1) = 0$. This indicates we need a boundary layer correction at $x = 1$.\n\nLet's introduce a boundary layer variable $\\xi = (1-x)/\\epsilon$, and seek a correction term $Y(\\xi)$ that decays away from $x = 1$.\n\nFor the boundary layer equation:\n$\\frac{d^2Y}{d\\xi^2} - \\frac{dY}{d\\xi} + \\epsilon Y = 0$\n\nTo leading order, this is:\n$\\frac{d^2Y}{d\\xi^2} - \\frac{dY}{d\\xi} = 0$\nWith general solution $Y(\\xi) = A + Be^{\\xi}$\n\nSince we need $Y(\\xi) \\to 0$ as $\\xi \\to \\infty$ (i.e., away from $x = 1$), we must have $A = 0$.\nSo $Y(\\xi) = Be^{\\xi}$\n\nThe composite solution is:\n$y(x) = e^{1-x} + \\epsilon(e^{-x} - 1 + Be^{(1-x)/\\epsilon}) + O(\\epsilon^2)$\n\nAt $x = 1$, we need $y(1) = 1$, which gives:\n$1 = 1 + \\epsilon(e^{-1} - 1 + B) + O(\\epsilon^2)$\n\nThis requires $B = 1 - e^{-1}$\n\nTherefore, our uniformly valid approximation is:\n$y(x) = e^{1-x} + \\epsilon(e^{-x} - 1 + (1-e^{-1})e^{(1-x)/\\epsilon}) + O(\\epsilon^2)$\n\n$\\boxed{e^{1-x} + \\epsilon(e^{-x} - 1 + (1-e^{-1})e^{(1-x)/\\epsilon})}$",
+    "type": "boundary_layers",
+    "index": 5,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "e^{1-x} + \\epsilon(e^{-x} - 1 + (1-e^{-1})e^{(1-x)/\\epsilon})"
+    ],
+    "solution_latex": [
+      "y = e^{1-x} + \\epsilon[(-x+1)e^{1-x} -e^{1-\\frac{x}{\\epsilon}}]"
+    ],
+    "model_eval_result": [
+      0.2480091113335721
+    ],
+    "solution_eval_result": [
+      -2.4357876344139173
+    ]
+  },
+  {
+    "prompt_idx": 12,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' - (x+2)y' - (3+x) = 0$ with boundary conditions $y(-1) = 1, y(1) = 1$ in the limit $\\epsilon = 0$ from the positive direction. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find a uniformly valid approximation to the differential equation $\\epsilon y'' - (x+2)y' - (3+x) = 0$ with boundary conditions $y(-1) = 1, y(1) = 1$ when $\\epsilon$ is small and positive.\n\nFirst, I'll find the outer solution by setting $\\epsilon = 0$:\n$-(x+2)y' - (3+x) = 0$\n$y' = -\\frac{3+x}{x+2}$\n$y = -\\int \\frac{3+x}{x+2} dx = -(3+x-\\frac{5}{x+2}) + C = -(x+3-\\frac{5}{x+2}) + C$\n\nLet's set this outer solution as $y_{out}(x) = -(x+3-\\frac{5}{x+2}) + C$\n\nFor boundary layer behavior, I need to determine if there are boundary layers at $x=-1$ or $x=1$ or both.\n\nSince the coefficient of $y'$ is $-(x+2)$, at $x=-1$ this becomes $-1$, which is negative. This means there is no boundary layer at $x=-1$.\n\nAt $x=1$, the coefficient is $-(1+2) = -3$, which is also negative, so no boundary layer forms there either.\n\nWhat we have is a situation with an interior layer where the coefficient $-(x+2)$ changes sign, which would be at $x=-2$. Since this is outside our region of interest $[-1,1]$, we don't need to consider an interior layer solution.\n\nHowever, I still need to satisfy the boundary conditions. Using $y_{out}(-1) = -(-1+3-\\frac{5}{-1+2}) + C = -(2-5) + C = -(-3) + C = 3 + C$, and we need this to equal 1, so $C = -2$.\n\nSimilarly, $y_{out}(1) = -(1+3-\\frac{5}{1+2}) + C = -(4-\\frac{5}{3}) + C = -(4-\\frac{5}{3}) - 2$. For this to equal 1, we get a contradiction.\n\nThis suggests there is actually a boundary layer at one of the endpoints. Looking more carefully, the reduced equation $-(x+2)y' - (3+x) = 0$ is a first-order equation, but our original problem has two boundary conditions. This confirms we need a boundary layer.\n\nSince the coefficient $-(x+2)$ is more negative at $x=1$ than at $x=-1$, the boundary layer is most likely at $x=1$.\n\nFor a boundary layer at $x=1$, I'll use the stretching transformation $z = \\frac{1-x}{\\epsilon}$.\n\nThe uniformly valid approximation combines the outer solution with a boundary layer correction:\n\n$y_{uniform}(x) = -(x+3-\\frac{5}{x+2}) - 2 + (1-y_{out}(1))e^{-\\frac{3}{\\epsilon}(1-x)}$\n\nCalculating $y_{out}(1) = -(1+3-\\frac{5}{3}) - 2 = -(4-\\frac{5}{3}) - 2 = -4+\\frac{5}{3} - 2 = -\\frac{7}{3}+\\frac{5}{3} = -\\frac{2}{3}$\n\nTherefore:\n$y_{uniform}(x) = -(x+3-\\frac{5}{x+2}) - 2 + (1+\\frac{2}{3})e^{-\\frac{3}{\\epsilon}(1-x)} = -(x+3-\\frac{5}{x+2}) - 2 + \\frac{5}{3}e^{-\\frac{3}{\\epsilon}(1-x)}$\n\nThe final uniformly valid approximation is:\n\n$\\boxed{-(x+3-\\frac{5}{x+2}) - 2 + \\frac{5}{3}e^{-\\frac{3}{\\epsilon}(1-x)}}$",
+    "type": "boundary_layers",
+    "index": 6,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "-(x+3-\\frac{5}{x+2}) - 2 + \\frac{5}{3}e^{-\\frac{3}{\\epsilon}(1-x)}"
+    ],
+    "solution_latex": [
+      "y_{uniform}(x) = - \\ln(2+x) -x + (\\ln(3) + 2)e^{\\frac{-3(1-x)}{\\epsilon}}"
+    ],
+    "model_eval_result": [
+      -1.927995613076182
+    ],
+    "solution_eval_result": [
+      2.9213739033904895
+    ]
+  },
+  {
+    "prompt_idx": 14,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' + (1 + x^2) y' - y = 0$ with boundary conditions $y(0) = 1, y(1) = 2$ in the limit $\\epsilon = 0$ from the positive direction. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find a uniformly valid approximation to the given boundary value problem as $\\epsilon \\to 0^+$.\n\nFirst, I'll analyze the outer solution by setting $\\epsilon = 0$ in the original equation:\n$(1 + x^2) y' - y = 0$\n\nThis first-order equation has the solution:\n$y_{\\text{outer}}(x) = C (1+x^2)^{1/2}$\n\nFor the inner solution near $x = 0$, I'll use the stretching transformation $\\xi = x/\\epsilon^{1/2}$.\nThe equation becomes:\n$\\frac{d^2y}{d\\xi^2} + (1 + \\epsilon \\xi^2)\\frac{dy}{d\\xi} - \\epsilon y = 0$\n\nAs $\\epsilon \\to 0$, the leading order inner equation is:\n$\\frac{d^2y}{d\\xi^2} + \\frac{dy}{d\\xi} = 0$\n\nThis has the solution:\n$y_{\\text{inner}}(x) = A + B(1-e^{-x/\\epsilon^{1/2}})$\n\nTo match the inner and outer solutions, I need to apply boundary conditions and matching conditions:\n1. $y(0) = 1$ gives $A = 1$\n2. $y(1) = 2$ determines the constant $C$ in the outer solution: $C = 2/\\sqrt{2} = \\sqrt{2}$\n3. Matching the solutions requires $B = \\sqrt{2} - 1$\n\nFor a uniformly valid approximation, I combine the inner and outer solutions and subtract their common part in the matching region:\n$y_{\\text{uniform}} = y_{\\text{inner}} + y_{\\text{outer}} - y_{\\text{common}}$\n\nThe common part is $\\lim_{\\xi \\to \\infty} y_{\\text{inner}} = \\lim_{x \\to 0} y_{\\text{outer}} = 1 + B = \\sqrt{2}$\n\nTherefore, the uniformly valid approximation is:\n\n$\\boxed{1 + (\\sqrt{2}-1)(1-e^{-x/\\epsilon^{1/2}}) + \\sqrt{2}(1+x^2)^{1/2} - \\sqrt{2}}$",
+    "type": "boundary_layers",
+    "index": 8,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "1 + (\\sqrt{2}-1)(1-e^{-x/\\epsilon^{1/2}}) + \\sqrt{2}(1+x^2)^{1/2} - \\sqrt{2}"
+    ],
+    "solution_latex": [
+      "y = 2 e^{\\arctan(x) - \\pi/4} + (1 - 2 e^{-pi/4}) e^{-x/\\epsilon}"
+    ],
+    "model_eval_result": [
+      2.249081681356234
+    ],
+    "solution_eval_result": [
+      2.382246252863305
+    ]
+  },
+  {
+    "prompt_idx": 15,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' + (x^2 +1)y'+2xy=0$ with boundary conditions $y(0)=1, y(1)=5$ in the limit $\\epsilon = 0$ from the positive direction. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I need to find a uniformly valid approximation for this singular perturbation problem where \u03b5 is a small positive parameter.\n\nFirst, I'll examine the reduced equation (\u03b5 = 0):\n$(x^2+1)y'+2xy=0$\n\nThis is a first-order equation that can be solved directly:\n$(x^2+1)y'+2xy=0$\n$\\frac{y'}{y} = -\\frac{2x}{x^2+1}$\n$\\ln(y) = -\\ln(x^2+1) + C$\n$y = \\frac{C}{x^2+1}$\n\nI need to apply the boundary conditions. For the outer solution, I can use $y(1)=5$, giving:\n$5 = \\frac{C}{1+1}$, so $C=10$\n\nTherefore, the outer solution is: $y_{out}(x) = \\frac{10}{x^2+1}$\n\nHowever, this doesn't satisfy $y(0)=1$ due to a boundary layer at x=0. I need an inner solution.\n\nLet's use the boundary layer coordinate \u03be = x/\u221a\u03b5 and develop a boundary layer correction near x=0.\n\nThe inner solution will be of the form $y_{in}(\u03be) = y_{out}(0) + (y(0)-y_{out}(0))e^{-\u03be}$\n\nSince $y_{out}(0) = \\frac{10}{0^2+1} = 10$ and $y(0)=1$, the inner correction is:\n$y_{in}(\u03be) = 10 + (1-10)e^{-\u03be} = 10 - 9e^{-x/\\sqrt{\\epsilon}}$\n\nThe uniformly valid approximation is:\n$y(x) = y_{out}(x) + (y_{in}(x/\\sqrt{\\epsilon}) - y_{out}(0))$\n\n$y(x) = \\frac{10}{x^2+1} + (10 - 9e^{-x/\\sqrt{\\epsilon}} - 10)$\n\n$y(x) = \\frac{10}{x^2+1} - 9e^{-x/\\sqrt{\\epsilon}}$\n\nThis is my final uniformly valid approximation:\n\n$\\boxed{\\frac{10}{x^2+1} - 9e^{-x/\\sqrt{\\epsilon}}}$",
+    "type": "boundary_layers",
+    "index": 9,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "\\frac{10}{x^2+1} - 9e^{-x/\\sqrt{\\epsilon}}"
+    ],
+    "solution_latex": [
+      "y(x) = \\frac{10}{x^2+1} + e^{\\frac{-x}{\\epsilon}} - 10e^{\\frac{-x}{\\epsilon}}"
+    ],
+    "model_eval_result": [
+      0.09715692357443606
+    ],
+    "solution_eval_result": [
+      -0.9876305209450749
+    ]
+  },
+  {
+    "prompt_idx": 16,
+    "query_idx": 0,
+    "prompt": "Find a uniformly valid approximation to the solution of $\\epsilon y'' + x y' + y = 0$ with boundary conditions $y(0)=1, y(1)=1$ in the limit $\\epsilon = 0$ from the positive direction. Denote the square root of -1 as I. Use only the variables and constants given in the problem; do not define additional constants. Place your final solution in a $\\boxed{}$ LaTeX environment.",
+    "model_name": "Claude 3.7 Sonnet",
+    "model_response": "I'll find a uniformly valid approximation for this boundary value problem with a small parameter \u03b5.\n\nFirst, let me find the outer solution (away from boundary layers) by setting \u03b5 = 0:\nx\u2092y\u2092' + y\u2092 = 0\nThis gives y\u2092 = C/x\n\nThe boundary condition y(1) = 1 gives C = 1, so y\u2092 = 1/x.\n\nHowever, this can't satisfy y(0) = 1, indicating a boundary layer at x = 0.\n\nFor the inner solution near x = 0, I'll use the stretched variable \u03be = x/\u03b5.\nIn terms of \u03be, the equation becomes:\ny\u1d62'' + \u03bey\u1d62' + \u03b5y\u1d62 = 0\n\nFor \u03b5 \u2192 0, the dominant balance is:\ny\u1d62'' + \u03bey\u1d62' \u2248 0\n\nThis has the solution:\ny\u1d62 = A + B\u222b\u2080^\u03be exp(-t\u00b2/2)dt\n\nAs \u03be \u2192 \u221e, y\u1d62 must match y\u2092 as x \u2192 0, which means A = 0.\n\nFor the matching condition: B\u221a(\u03c0/2) = 1, so B = \u221a(2/\u03c0).\n\nThe complete uniformly valid approximation is:\ny \u2248 y\u1d62 + y\u2092 - (matching term)\n= \u221a(2/\u03c0)\u222b\u2080^(x/\u03b5) exp(-t\u00b2/2)dt + 1/x - 0\n\nSince \u222b\u2080^(x/\u03b5) exp(-t\u00b2/2)dt = \u221a(\u03c0/2)erf(x/(\u221a(2\u03b5))), the solution becomes:\n\n$\\boxed{erf\\left(\\frac{x}{\\sqrt{2\\epsilon}}\\right) + \\frac{1}{x}}$",
+    "type": "boundary_layers",
+    "index": 10,
+    "eval_success": true,
+    "is_equivalent": false,
+    "model_latex_solution": [
+      "erf\\left(\\frac{x}{\\sqrt{2\\epsilon}}\\right) + \\frac{1}{x}"
+    ],
+    "solution_latex": [
+      "y(x) \\approx \\frac{1}{\\sqrt{\\epsilon}}e^{\\frac{-x^2}{2\\epsilon}} \\\\i \\sqrt{\\frac{\\pi}{2}}erfi(\\frac{x}{\\sqrt{2\\epsilon}})+ e^{\\frac{-x^2}{2\\epsilon}}"
+    ],
+    "model_eval_result": [
+      1.40247349352714
+    ],
+    "solution_eval_result": [
+      
