@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{geometry}
+\usepackage{graphicx}
+\geometry{margin=1in}
+\begin{document}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Model} & \multicolumn{2}{c|}{\textbf{Overall}} & \multicolumn{2}{c|}{\textbf{Asympytotic Series}} & \multicolumn{2}{c|}{\textbf{Boundary Layers}} & \multicolumn{2}{c|}{\textbf{Integrals}} & \multicolumn{2}{c|}{\textbf{Nonlinear Ode}} & \multicolumn{2}{c|}{\textbf{Nonlinear Pde}} & \multicolumn{2}{c|}{\textbf{Other}} & \multicolumn{2}{c|}{\textbf{Wkb}} \\
+\cline{2-17}
+  & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} \\
+\hline
+Claude 3.7 Sonnet & 11.8 & 186 & 33.3 & 3 & 4.2 & 72 & 61.5 & 13 & 28.6 & 7 & 1.7 & 60 & 16.7 & 6 & 24.0 & 25 \\
+\hline
+\end{tabular}
+}
+\caption{Pass@1 Rates and Problem Counts by Model and Question Type}
+\end{table}
+\end{document}

@@ -32,6 +32,8 @@ python scripts/run_eval.py --limit 3
 
 The complete results are saved in `results/full_results.json` while `results/results.json` has an abbreviated results that removes the prompt and does not save intermediate Sympy expressions within the `EvaluationResult` framework.
 
+If the evaluation doesn't complete after running run_eval.py, you can use ```eval_on_logged.py``` to use query_log.json files to complete the evaluations.
+
 Once the evaluation is complete, you may run
 ```
 python scripts/generate_summary.py
