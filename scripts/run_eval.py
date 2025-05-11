@@ -2,10 +2,13 @@ import json
 import asyncio
 import os
 import hashlib
+import datetime
+import shutil
+import argparse
 
 from benchmark_evaluator import bulk_query_with_progress, evaluate_solution
 from datasets import load_dataset
-from benchmark_evaluator.query import SUPPORTED_MODELS, SUPPORTED_MODELS_OPENAI, SUPPORTED_MODELS_GEMINI
+from benchmark_evaluator.query import SUPPORTED_MODELS, SUPPORTED_MODELS_OPENAI, SUPPORTED_MODELS_GEMINI, SUPPORTED_MODELS_ANTHROPIC, SUPPORTED_MODELS_TOGETHER, SUPPORTED_MODELS_DEEPSEEK
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -34,6 +37,8 @@ def validate_api_keys(selected_models):
     # Check which model classes we're using
     using_openai = any(model in SUPPORTED_MODELS_OPENAI for model in selected_models)
     using_gemini = any(model in SUPPORTED_MODELS_GEMINI for model in selected_models)
+    using_anthropic = any(model in SUPPORTED_MODELS_ANTHROPIC for model in selected_models)
+    using_together = any(model in SUPPORTED_MODELS_TOGETHER for model in selected_models)
     
     # Validate API keys
     missing_keys = []
@@ -41,6 +46,10 @@ def validate_api_keys(selected_models):
         missing_keys.append("OPENAI_API_KEY")
     if using_gemini and not os.environ.get("GEMINI_API_KEY"):
         missing_keys.append("GEMINI_API_KEY")
+    if using_anthropic and not os.environ.get("ANTHROPIC_API_KEY"):
+        missing_keys.append("ANTHROPIC_API_KEY")
+    if using_together and not os.environ.get("TOGETHER_API_KEY"):
+        missing_keys.append("TOGETHER_API_KEY")
     
     if missing_keys:
         print(f"Error: Missing required API keys: {', '.join(missing_keys)}")
@@ -77,18 +86,18 @@ def get_prompt_hash(prompt):
     """Generate a hash for the prompt text."""
     return hashlib.md5(prompt.encode()).hexdigest()
 
-def log_prompt(prompt, model_name, query_idx):
+def log_prompt(prompt, model_name, query_idx, log_file):
     """Log a completed prompt query."""
     log = set()
-    if os.path.exists(QUERY_LOG_FILE):
-        with open(QUERY_LOG_FILE, 'r') as f:
+    if os.path.exists(log_file):
+        with open(log_file, 'r') as f:
             log = set(json.load(f))
     
     prompt_hash = get_prompt_hash(prompt)
     log.add(prompt_hash)
     
-    os.makedirs(os.path.dirname(QUERY_LOG_FILE), exist_ok=True)
-    with open(QUERY_LOG_FILE, 'w') as f:
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    with open(log_file, 'w') as f:
         json.dump(list(log), f, indent=2)
 
 def process_results(query_results, prompt_list, solution_list, parameter_list, type_list, index_list):
@@ -139,6 +148,11 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     return full_results, results
 
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="Run model evaluation on benchmark data")
+    parser.add_argument("--limit", type=int, help="Limit evaluation to the first N prompts", default=0)
+    args = parser.parse_args()
+    
     # Load and validate configuration
     config = load_config()
     selected_models = validate_models(config)
@@ -148,6 +162,21 @@ def main():
     print(f"Running evaluation with models: {selected_models}", flush=True)
     print(f"Number of queries per prompt: {num_queries}", flush=True)
     
+    # Create a timestamp for unique results
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Create results directory with timestamp
+    results_dir = f"results_{timestamp}"
+    os.makedirs(results_dir, exist_ok=True)
+    
+    # Update results paths with timestamp
+    query_log_file = f"{results_dir}/query_log.json"
+    query_results_file = f"{results_dir}/query_results.json"
+    full_results_file = f"{results_dir}/full_results.json"
+    results_file = f"{results_dir}/results.json"
+    
+    print(f"Results will be saved to directory: {results_dir}", flush=True)
+    
     dataset = load_dataset(HUGGINGFACE_DATASET_NAME, split="train")
 
     prompt_list = dataset["prompt"]
@@ -155,6 +184,15 @@ def main():
     parameter_list = dataset["parameters"]
     type_list = dataset["type"]
     index_list = dataset["index"]
+    
+    # Limit the number of prompts if requested
+    if args.limit > 0:
+        print(f"Limiting evaluation to the first {args.limit} prompts", flush=True)
+        prompt_list = prompt_list[:args.limit]
+        solution_list = solution_list[:args.limit]
+        parameter_list = parameter_list[:args.limit]
+        type_list = type_list[:args.limit]
+        index_list = index_list[:args.limit]
 
     # Create a list of (prompt, prompt_idx, query_idx) tuples for each query
     prompt_tuples = []
@@ -178,12 +216,12 @@ def main():
         
         # Log successful query
         if not error:
-            log_prompt(prompt_list[prompt_idx], model_name, query_idx)
+            # Update the query log function to use the new path
+            log_prompt(prompt_list[prompt_idx], model_name, query_idx, query_log_file)
     
     print(f"Number of updated results: {len(updated_results)}", flush=True)
 
     try:
-        os.makedirs("results", exist_ok=True)
         serializable_results = [
             {
                 "prompt_idx": prompt_idx,
@@ -194,7 +232,7 @@ def main():
             }
             for response, prompt_idx, model_name, error, query_idx in updated_results
         ]
-        with open("results/query_results.json", "w") as f:
+        with open(query_results_file, "w") as f:
             json.dump(serializable_results, f, indent=2)
     except Exception as e:
         print(f"Error saving query results: {e}", flush=True)
@@ -208,18 +246,15 @@ def main():
         index_list
     )
 
-    # Create results directory if it doesn't exist
-    os.makedirs("results", exist_ok=True)
-
     # Save results
-    with open("results/full_results.json", "w") as f:
+    with open(full_results_file, "w") as f:
         json.dump(full_results, f, indent=2)
 
-    with open("results/results.json", "w") as f:
+    with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"Saved {len(results)} results to results.json", flush=True)
-    print(f"Saved {len(full_results)} results to full_results.json", flush=True)
+    print(f"Saved {len(results)} results to {results_file}", flush=True)
+    print(f"Saved {len(full_results)} results to {full_results_file}", flush=True)
 
 if __name__ == "__main__":
     main()

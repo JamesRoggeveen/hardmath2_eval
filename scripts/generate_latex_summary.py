@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import argparse
 project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 from typing import Dict, Any, List
@@ -10,6 +11,29 @@ import re
 ALL_MODELS = [
     "Gemini 2.0 Flash", "Gemini 2.0 Flash Thinking", "GPT-4o"
 ]
+
+def format_complex_number(value):
+    """Convert a complex number to LaTeX format."""
+    if isinstance(value, str):
+        # Handle string representation of complex numbers
+        try:
+            # Remove parentheses and convert to complex
+            value = value.strip('()')
+            value = complex(value)
+        except ValueError:
+            return value  # Return as is if not a complex number
+    
+    if isinstance(value, complex):
+        real = value.real
+        imag = value.imag
+        if imag == 0:
+            return f"{real:.6f}"
+        elif real == 0:
+            return f"{imag:.6f}i"
+        else:
+            return f"{real:.6f} {'+' if imag > 0 else '-'} {abs(imag):.6f}i"
+    else:
+        return f"{float(value):.6f}"
 
 def get_models_from_results(results: List[Dict[str, Any]]) -> List[str]:
     """Extract unique models from the results."""
@@ -333,7 +357,8 @@ def generate_full_results_summary(results: List[Dict[str, Any]]) -> str:
                         latex += "\\hline\n"
                         # Format each evaluation result
                         for m_eval, s_eval in zip(model_eval, solution_eval):
-                            latex += f"{m_eval} & {s_eval} \\\\\n"
+                            # latex += f"{m_eval:.6f} & {s_eval:.6f} \\\\\n"
+                            latex += f"{format_complex_number(m_eval)} & {format_complex_number(s_eval)} \\\\\n"                        
                         latex += "\\hline\n"
                         latex += "\\end{tabular}\n\n"
                     
@@ -445,14 +470,20 @@ def generate_detailed_summary(results: List[Dict[str, Any]]) -> str:
     return latex
 
 def main():
-    # Read results from both JSON files
-    results_dir = os.path.join(project_root, "results")
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="Generate LaTeX summary from evaluation results")
+    parser.add_argument("--results-dir", type=str, default="results", 
+                        help="Directory containing results.json, full_results.json, and summary.json")
+    args = parser.parse_args()
+    
+    # Get the full path to the results directory
+    results_dir = os.path.join(project_root, args.results_dir)
     
     # Check if summary.json exists, if not generate it first
     summary_path = os.path.join(results_dir, "summary.json")
     if not os.path.exists(summary_path):
         from generate_summary import generate_summary
-        generate_summary()
+        generate_summary(args.results_dir)
     
     # Read summary statistics
     with open(summary_path, 'r') as f:
@@ -468,9 +499,13 @@ def main():
     with open(full_path, 'r') as f:
         full_results = json.load(f)
     
-    # Generate LaTeX documents
-    latex_dir = os.path.join(project_root, "results")
+    # Generate LaTeX documents in the same results directory
+    latex_dir = results_dir
     os.makedirs(latex_dir, exist_ok=True)
+    
+    # Output file paths
+    summary_file = os.path.join(latex_dir, "llm_summary.tex")
+    full_results_file = os.path.join(latex_dir, "llm_full_results.tex")
     
     # Generate summary document
     summary_latex = "\\documentclass{article}\n"
@@ -516,7 +551,7 @@ def main():
     
     summary_latex += "\\end{document}\n"
     
-    with open(os.path.join(latex_dir, "llm_summary.tex"), 'w') as f:
+    with open(summary_file, 'w') as f:
         f.write(summary_latex)
     
     # Generate full results document
@@ -563,8 +598,11 @@ def main():
     
     full_latex += "\\end{document}\n"
     
-    with open(os.path.join(latex_dir, "llm_full_results.tex"), 'w') as f:
+    with open(full_results_file, 'w') as f:
         f.write(full_latex)
+    
+    print(f"LaTeX summary generated in {summary_file}")
+    print(f"LaTeX full results generated in {full_results_file}")
 
 if __name__ == "__main__":
     main() 
