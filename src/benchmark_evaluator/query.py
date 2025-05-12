@@ -151,20 +151,29 @@ async def query_anthropic_async(client, prompt: str, model_name: str, idx: int =
         return f"Error querying {model_name}: {e}", idx, model_name, True
     
 async def query_together_async(client, prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
-    """Non-blocking Together AI chat completion."""
+    """Non-blocking Together AI chat completion with conditional system prompt support."""
     model_id = SUPPORTED_MODELS_TOGETHER[model_name]
     print(f"Querying {model_name} via Together AI with prompt {idx}", flush=True)
+
     try:
-        system_messages = [
-            {"role": "system", "content": SYSTEM_INSTRUCTION}
-        ]
+        # DeepSeek similar models should NOT receive a system prompt
+        if "deepseek" in model_id.lower():
+            messages = [{"role": "user", "content": f"Instruction:\n{SYSTEM_INSTRUCTION}\n\nTask:\n{prompt}"}]
+        else:
+            messages = [
+                {"role": "system", "content": SYSTEM_INSTRUCTION},
+                {"role": "user", "content": prompt},
+            ]
+
         response = await client.chat.completions.create(
             model=model_id,
-            messages=system_messages + [{"role": "user", "content": prompt}],
+            messages=messages,
         )
         return response.choices[0].message.content, idx, model_name, False
+
     except Exception as e:
         return f"Error querying {model_name} via Together AI: {e}", idx, model_name, True
+
 
 async def query_llm_async(prompt: str, model_name: str, idx: int = 0) -> Tuple[str, bool]:
     if model_name in SUPPORTED_MODELS_OPENAI:

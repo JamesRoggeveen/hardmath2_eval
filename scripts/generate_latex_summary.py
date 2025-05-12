@@ -101,6 +101,7 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     # End one-shot table
     latex += "\\end{tabular}\n"
     latex += "\\caption{One-Shot Success Rate (All Queries Correct)}\n"
+    latex += "\\label{tab:one-shot}\n"
     
     # Add key with model names
     latex += "\\begin{center}\n"
@@ -148,6 +149,7 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     # End percentage table
     latex += "\\end{tabular}\n"
     latex += "\\caption{Percentage of Correct Queries}\n"
+    latex += "\\label{tab:percentage}\n"
     
     # Add key with model names
     latex += "\\begin{center}\n"
@@ -190,6 +192,7 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     
     latex += "\\end{tabular}\n"
     latex += "\\caption{Success Rates by Model and Question Type}\n"
+    latex += "\\label{tab:success-rates}\n"
     latex += "\\end{table}\n\n"
     
     # Generate pass@1 rates table
@@ -217,6 +220,7 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     
     latex += "\\end{tabular}\n"
     latex += "\\caption{Pass@1 Rates by Model and Question Type}\n"
+    latex += "\\label{tab:pass-at-1}\n"
     latex += "\\end{table}\n\n"
     
     # Generate pass@n rates table
@@ -244,6 +248,7 @@ def generate_latex_table(summary_stats: Dict[str, Any]) -> str:
     
     latex += "\\end{tabular}\n"
     latex += f"\\caption{{Pass@{queries_per_prompt} Rates by Model and Question Type}}\n"
+    latex += "\\label{tab:pass-at-n}\n"
     latex += "\\end{table}\n"
     
     return latex
@@ -419,7 +424,7 @@ def generate_detailed_summary(results: List[Dict[str, Any]]) -> str:
                     latex += "\\vspace{0.5em}\n\n"
                     
                     # Add model solution
-                    model_solution = result.get('model_solution_latex', [])
+                    model_solution = result.get('model_latex_solution', [])
                     if model_solution:
                         latex += "\\noindent\\textbf{{Model Solution}}:\\par\n"
                         for solution in model_solution:

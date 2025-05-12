@@ -22,8 +22,14 @@ deletion_rules = [
     r"\\Bigr",
     r"\\bigl",
     r"\\bigr",
+    r"\\biggl",
+    r"\\biggr",
     r"\\Biggl",
     r"\\Biggr",
+    r"\\Big",
+    r"\\big",
+    r"\\Bigg",
+    r"\\bigg",
     r"\\hline",
     r"\\vline",
     r"$",
@@ -42,7 +48,9 @@ deletion_rules = [
     r"\\;",
     r"\\:",
     r"\\quad",
-    r"\\qquad"
+    r"\\qquad",
+    r"\\begin\{aligned\}",
+    r"\\end\{aligned\}"
 ]
 
 # Replace LaTeX formatting with expression formatting
@@ -76,6 +84,7 @@ nested_rules = {
     r'\\dfrac\{([^{}]*)\}\{([^{}]*)\}' : r'(\1)/(\2)',
     r'\\tfrac\{([^{}]*)\}\{([^{}]*)\}' : r'(\1)/(\2)',
     r'\\tfrac(\d)(\d)': r'(\1)/(\2)',
+    r'\\frac(\d)(\d)': r'(\1)/(\2)',
     r'\\sqrt\[(.*?)\]\{([^{}]*)\}' : r'(\2)**(1/(\1))',
     r'\\sqrt\{([^{}]*)\}' : r'(\1)**(1/2)',
     r'\^\{([^{}]*)\}' : r'^(\1)',
@@ -99,7 +108,7 @@ final_rules = {
 #     'sqsinh':'sinh', 'sqcosh':'cosh', 'sqtanh':'tanh', 'sqcoth':'coth', 'sqsech':'sech', 'sqcsch':'csch'
 # }
 
-intermediate_functions = ['sin', 'cos', 'tan', 'csc', 'sec', 'cot', 'sinh', 'cosh', 'tanh', 'coth', 'sech', 'csch']
+intermediate_functions = ['sin', 'cos', 'tan', 'csc', 'sec', 'cot', 'sinh', 'cosh', 'tanh', 'coth', 'sech', 'csch', 'ln']
 intermediate_functions = sorted(intermediate_functions, key=len, reverse=True)
 # List of known functions to be handled by Sympy
 sympy_functions = [
@@ -107,7 +116,7 @@ sympy_functions = [
     'sinh', 'cosh', 'tanh', 'coth', 'sech', 'csch',
     'asin', 'acos', 'atan', 'acsc', 'asec', 'acot',
     'asinh', 'acosh', 'atanh', 'acoth', 'asech', 'acsch',
-    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs', 'max', 'min', 'airyai', 'Ai'
+    'log', 'ln', 'exp', 'sqrt', 'gamma', 'Ei', 'erf', 'erfc', 'erfi', 'abs', 'max', 'min', 'airyai', 'Ai', 'ln', 'log'
 ]
 
 # Define list of symbols that are multicharacter and should be handled by Sympy

@@ -3,6 +3,7 @@ from benchmark_evaluator import evaluate_solution
 from datasets import load_dataset
 import os
 import tqdm
+import argparse
 
 def process_results(query_results, prompt_list, solution_list, parameter_list, type_list, index_list, skip_list):
     """Process query results and generate evaluation results."""
@@ -71,18 +72,31 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     
     return full_results, results
 
-
 if __name__ == "__main__":
-    with open('results/query_results.json', 'r') as f:
-        results = json.load(f)
+    parser = argparse.ArgumentParser(
+        description="Process query_results.json and produce evaluation outputs"
+    )
+    parser.add_argument(
+        "--results_dir",
+        type=str,
+        default="results",
+        help="Directory containing query_results.json and where outputs will be saved"
+    )
+    args = parser.parse_args()
+    results_dir = args.results_dir
+
+    # Load the raw query results
+    input_path = os.path.join(results_dir, "query_results.json")
+    with open(input_path, "r") as f:
+        raw_results = json.load(f)
 
     updated_results = []
-    for result in results:
+    for result in raw_results:
+        response = result["response"]
         prompt_idx = result["prompt_idx"]
         model_name = result["model_name"]
-        response = result["response"]
-        query_idx = result["query_idx"]
         error = result["error"]
+        query_idx = result["query_idx"]
         updated_results.append((response, prompt_idx, model_name, error, query_idx))
 
     print(f"Number of results loaded: {len(updated_results)}")
@@ -96,56 +110,88 @@ if __name__ == "__main__":
     type_list = dataset["type"]
     index_list = dataset["index"]
 
-    skip_indicies = [0,56,168,195,205]
-    # bad_sols = []
-    # start_idx = 0
-    # for i in range(start_idx, len(prompt_list)):
-    #     if i in skip_indicies:
-    #         continue
-    #     print(f"Evaluating solution {i}")
-    #     eval_sol = evaluate_solution(solution_list[i],parameter_list[i])
-    #     if eval_sol.success == False:
-    #         bad_sols.append(i)
-    #     print(f"Solution success: {eval_sol.success}")
-    # print(bad_sols)
+    skip_indices = [0, 56, 168, 195, 205]
+
     full_results, results = process_results(
-        updated_results, 
-        prompt_list, 
-        solution_list, 
-        parameter_list, 
-        type_list, 
+        updated_results,
+        prompt_list,
+        solution_list,
+        parameter_list,
+        type_list,
         index_list,
-        skip_indicies
+        skip_indices
     )
 
-    # Create results directory if it doesn't exist
-    os.makedirs("results", exist_ok=True)
+    # Ensure output directory exists
+    os.makedirs(results_dir, exist_ok=True)
 
     # Save results
-    with open("results/full_results.json", "w") as f:
+    with open(os.path.join(results_dir, "full_results.json"), "w") as f:
         json.dump(full_results, f, indent=2)
 
-    with open("results/results.json", "w") as f:
+    with open(os.path.join(results_dir, "results.json"), "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"Saved {len(results)} results to results.json", flush=True)
-    print(f"Saved {len(full_results)} results to full_results.json", flush=True)
+    print(f"Saved {len(results)} results to {results_dir}/results.json", flush=True)
+    print(f"Saved {len(full_results)} results to {results_dir}/full_results.json", flush=True)
 
-    # model_evals = []
-    # start_idx = 1850
-    # for i in range(start_idx, len(results)):
-    #     item = results[i]
-    #     if item["error"] == True:
-    #         continue
-    #     model = item["model_name"]
-    #     idx = item["prompt_idx"]
-    #     print(f"Evaluating {model} on prompt {idx} at index {i}")
-    #     response = item["response"]
-    #     parameter_str = parameter_list[idx]
-    #     eval_sol = evaluate_solution(response,parameter_str)
-    #     eval_sol = eval_sol.to_dict()
-    #     model_evals.append({
-    #         "prompt": idx,
-    #         "model": model,
-    #         "eval": eval_sol
-    #     })
+# if __name__ == "__main__":
+#     with open('results/query_results.json', 'r') as f:
+#         results = json.load(f)
+
+#     updated_results = []
+#     for result in results:
+#         prompt_idx = result["prompt_idx"]
+#         model_name = result["model_name"]
+#         response = result["response"]
+#         query_idx = result["query_idx"]
+#         error = result["error"]
+#         updated_results.append((response, prompt_idx, model_name, error, query_idx))
+
+#     print(f"Number of results loaded: {len(updated_results)}")
+
+#     HUGGINGFACE_DATASET_NAME = "AnonBenchmark5727/benchmark_data"
+#     dataset = load_dataset(HUGGINGFACE_DATASET_NAME, split="train", cache_dir=".cache")
+
+#     prompt_list = dataset["prompt"]
+#     solution_list = dataset["solution"]
+#     parameter_list = dataset["parameters"]
+#     type_list = dataset["type"]
+#     index_list = dataset["index"]
+
+#     skip_indicies = [0,56,168,195,205]
+#     # bad_sols = []
+#     # start_idx = 0
+#     # for i in range(start_idx, len(prompt_list)):
+#     #     if i in skip_indicies:
+#     #         continue
+#     #     print(f"Evaluating solution {i}")
+#     #     eval_sol = evaluate_solution(solution_list[i],parameter_list[i])
+#     #     if eval_sol.success == False:
+#     #         bad_sols.append(i)
+#     #     print(f"Solution success: {eval_sol.success}")
+#     # print(bad_sols)
+#     full_results, results = process_results(
+#         updated_results, 
+#         prompt_list, 
+#         solution_list, 
+#         parameter_list, 
+#         type_list, 
+#         index_list,
+#         skip_indicies
+#     )
+
+#     # Create results directory if it doesn't exist
+#     os.makedirs("results", exist_ok=True)
+
+#     # Save results
+#     with open("results/full_results.json", "w") as f:
+#         json.dump(full_results, f, indent=2)
+
+#     with open("results/results.json", "w") as f:
+#         json.dump(results, f, indent=2)
+
+#     print(f"Saved {len(results)} results to results.json", flush=True)
+#     print(f"Saved {len(full_results)} results to full_results.json", flush=True)
+
+   

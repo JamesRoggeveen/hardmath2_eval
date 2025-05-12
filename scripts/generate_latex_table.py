@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import argparse
 project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 from typing import Dict, Any, List
@@ -23,48 +24,43 @@ def generate_pass_at_1_with_counts(summary_stats: Dict[str, Any]) -> str:
     latex += "\\usepackage{booktabs}\n"
     latex += "\\usepackage[table]{xcolor}\n"
     latex += "\\usepackage{geometry}\n"
-    latex += "\\usepackage{pdflscape}\n"  # For landscape orientation
-    latex += "\\usepackage{array}\n"  # For better table formatting
-    latex += "\\geometry{landscape,margin=0.75in}\n"  # Landscape orientation with smaller margins
+    latex += "\\usepackage{graphicx}\n"  # For resizebox
+    latex += "\\geometry{margin=1in}\n"
     latex += "\\begin{document}\n\n"
-    latex += "\\small\n"  # Smaller font size for the whole document
     
     # Generate pass@1 rates table
     latex += "\\begin{table}[h]\n"
     latex += "\\centering\n"
-    latex += "\\setlength{\\tabcolsep}{4pt}\n"  # Reduce column separation
+    latex += "\\resizebox{\\textwidth}{!}{\n"  # Resize table to fit page width
     
     # Table header
     latex += "\\begin{tabular}{|l|" + "|c" * (len(question_types) * 2) + "|}\n"
     latex += "\\hline\n"
     
-    # Main header row with shorter problem type names
+    # Main header row
     latex += "\\textbf{Model}"
     for qt in question_types:
-        # Shorter names for column headers
-        short_name = format_problem_type(qt)
-        if short_name.lower() != "overall":
-            # Abbreviate longer names
-            short_name = short_name.replace("Asympytotic", "Asymp.")
-            short_name = short_name.replace("Boundary", "Bound.")
-            short_name = short_name.replace("Nonlinear", "Nonlin.")
-        latex += f" & \\multicolumn{{2}}{{c|}}{{\\textbf{{{short_name}}}}}"
+        latex += f" & \\multicolumn{{2}}{{c|}}{{\\textbf{{{format_problem_type(qt)}}}}}"
     latex += " \\\\\n"
     
     # Subheader row with Rate and Count for each question type
     latex += "\\cline{2-" + str(len(question_types) * 2 + 1) + "}\n"
     latex += " "
     for _ in question_types:
-        latex += " & \\textbf{Rate} & \\textbf{Count}"  # Shorter column headers
+        latex += " & \\textbf{Rate} & \\textbf{Count}"
     latex += " \\\\\n"
     latex += "\\hline\n"
     
     # Generate rows for each model
     for model in models:
-        # Shorten model names for better fit
-        display_model = model.replace("Gemini 2.5 Flash Thinking", "Gem 2.5 Flash Think")
-        display_model = display_model.replace("Gemini 2.5 Pro Preview", "Gem 2.5 Pro")
-        display_model = display_model.replace("Gemini 2.0 Flash", "Gem 2.0 Flash")
+        # Fix model display names
+        display_model = model
+        
+        # Special handling for o1, o3, o3-mini, o4-mini models - remove "GPT-" prefix
+        if model.startswith("GPT-o"):
+            # For o1, o3, etc. models, remove the GPT- prefix
+            display_model = model[4:]  # Remove "GPT-" prefix
+        
         row = f"{display_model}"
         
         # Add overall pass@1 rate and count
@@ -83,15 +79,34 @@ def generate_pass_at_1_with_counts(summary_stats: Dict[str, Any]) -> str:
         latex += row
     
     latex += "\\end{tabular}\n"
+    latex += "}\n"  # Close resizebox
     latex += "\\caption{Pass@1 Rates and Problem Counts by Model and Question Type}\n"
     latex += "\\end{table}\n"
     latex += "\\end{document}\n"
     
     return latex
 
+
 def main():
+
+    parser = argparse.ArgumentParser(
+    description="Generate a LaTeX pass@1 table from summary statistics."
+    )
+    parser.add_argument(
+        "--results-dir",
+        default="results",
+        help="Folder holding summary.json (default: results). "
+             "You can pass a sibling like 'results_test' or an absolute path."
+    )
+    args = parser.parse_args()
+
     # Read summary statistics
-    results_dir = os.path.join(project_root, "results")
+    results_dir = (
+        args.results_dir                                    # absolute path → use as-is
+        if os.path.isabs(args.results_dir)
+        else os.path.join(project_root, args.results_dir)   # relative → under project_root
+    )
+    
     summary_path = os.path.join(results_dir, "summary.json")
     
     # Check if summary.json exists, if not generate it first
