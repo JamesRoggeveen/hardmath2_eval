@@ -165,9 +165,18 @@ if __name__ == "__main__":
         allowed_idx = {i for i, m in enumerate(mask) if m}
         updated_results = [r for r in updated_results if r[1] in allowed_idx]
 
-    # Apply limit after filtering
+    # Apply limit to UNIQUE problems (prompt_idx) after filtering
     if args.limit > 0:
-        updated_results = updated_results[:args.limit]
+        seen = set()
+        limited_results = []
+        for item in updated_results:
+            prompt_idx = item[1]
+            if prompt_idx not in seen:
+                if len(seen) >= args.limit:
+                    break
+                seen.add(prompt_idx)
+            limited_results.append(item)
+        updated_results = limited_results
 
     full_results, results = process_results(
         updated_results,
