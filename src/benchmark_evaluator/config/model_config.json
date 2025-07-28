@@ -26,7 +26,13 @@
     "SUPPORTED_MODELS_DEEPSEEK":
     {
         "DeepSeek R1": "deepseek-reasoner",
-        "DeepSeek v3": "deepseek-chat"
+        "DeepSeek V3": "DeepSeek-V3"
+    },
+    "SUPPORTED_MODELS_TOGETHER":
+    {
+        "DeepSeek R1": "deepseek-ai/DeepSeek-R1",
+        "DeepSeek V3": "deepseek-ai/DeepSeek-V3",
+        "Llama 4 Maverick": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
     },
     "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables. Do not include any other text besides the single solution in the $\\boxed{}$ environment, including information about the limits of variables or any Big O notation."
 }

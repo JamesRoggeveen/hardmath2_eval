@@ -17,6 +17,9 @@ class EvaluationResult:
     solution_result: Optional[ParsingResult] = None
     model_result: Optional[ParsingResult] = None
     is_equivalent: bool = False
+    judge_reasoning: Optional[str] = None
+    # Optional numeric score assigned by an LLM judge following a rubric
+    score: Optional[float] = None
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert the evaluation result to a dictionary for JSON serialization"""
@@ -34,6 +37,13 @@ class EvaluationResult:
         if self.model_result:
             result["model"] = self.model_result.to_dict()
             
+        # Add score if provided
+        if self.score is not None:
+            result["score"] = self.score
+
+        if self.judge_reasoning:
+            result["judge_reasoning"] = self.judge_reasoning
+
         return result
 
 def evaluate_model(model_response: str, solution_string: str, parameter_string: str, function_str: str, parse_function: Callable, eval_function: Callable) -> EvaluationResult:
@@ -160,3 +170,103 @@ def is_equivalent_numerics(result: EvaluationResult)->EvaluationResult:
         return result
     except Exception as e:
         result.error_message = f"Error comparing evaluation results: {str(e)}"
+
+
+# ============================
+#   LLM-as-a-judge evaluator
+# ============================
+
+import json as _json
+import os as _os
+
+def evaluate_with_llm_judge(model_response: str,
+                            solution_string: str,
+                            rubric_path: str,
+                            *,
+                            judge_model: str = "gpt-4o-mini",
+                            temperature: float = 0.0) -> EvaluationResult:
+    """Use an LLM to grade *model_response* against *solution_string* following the rubric.
+
+    The rubric must live in a text file at *rubric_path*.
+
+    Returns EvaluationResult with .score filled (float on [0,1] or according to rubric).
+    """
+
+    res = EvaluationResult()
+
+    # ---------- read rubric ----------
+    try:
+        with open(rubric_path, "r", encoding="utf-8") as _fp:
+            rubric_text = _fp.read().strip()
+    except Exception as _e:
+        res.error_message = f"Failed to read rubric file {rubric_path}: {_e}"
+        return res
+
+    # ---------- compose prompt ----------
+    system_msg = (
+        "You are an expert applied mathematician.\n"
+        "Grade the *candidate solution* against the *reference solution* strictly following the provided grading rubric.\n"
+        "Provide a numeric score and a step-by-step explanation of your reasoning according to the rubric."
+    )
+
+    user_msg = (
+        f"### GRADING RUBRIC\n{rubric_text}\n\n"
+        f"### REFERENCE SOLUTION (ground-truth, boxed)\n{solution_string}\n\n"
+        f"### CANDIDATE SOLUTION (model output, boxed)\n{model_response}\n\n"
+        "### INSTRUCTIONS\nEvaluate the candidate and produce the JSON now."
+    )
+
+    # ---------- call OpenAI ----------
+    try:
+        from openai import OpenAI  # local import to avoid hard dependency if unused
+        _api_key = _os.getenv("OPENAI_API_KEY")
+        if not _api_key:
+            raise RuntimeError("OPENAI_API_KEY environment variable not set")
+
+        _client = OpenAI(api_key=_api_key)
+        completion = _client.chat.completions.create(
+            model=judge_model,
+            temperature=temperature,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "grading_response",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "score": {"type": "number"},
+                            "explanation": {"type": "string"}
+                        },
+                        "required": ["score", "explanation"],
+                        "additionalProperties": False
+                    }
+                }
+            },
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": user_msg},
+            ],
+        )
+
+        content = completion.choices[0].message.content.strip()
+
+    except Exception as _e:
+        res.error_message = f"LLM judge call failed: {_e}"
+        return res
+
+    # ---------- parse JSON ----------
+    try:
+        verdict = _json.loads(content)
+        score_val = verdict["score"]
+        explanation = verdict["explanation"]
+
+        res.score = float(score_val)
+        res.is_equivalent = res.score > 0  # simplistic: non-zero score counts as equivalent
+        res.success = True  # mark overall process ok
+        res.judge_reasoning = explanation
+        return res
+
+    except Exception as _e:
+        res.error_message = f"Failed to parse LLM judge JSON: {_e}; raw content: {content}"
+        return res

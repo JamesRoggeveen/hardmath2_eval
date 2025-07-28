@@ -128,11 +128,15 @@ async def query_anthropic_async(client, prompt: str, model_name: str, idx: int =
         # Use the async client correctly
         message_response = await client.messages.create(
             model=model_id,
+            thinking={
+                "type": "enabled",
+                "budget_tokens": 16000
+            },
             system=SYSTEM_INSTRUCTION,
             messages=[
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=8192
+            max_tokens=16192
         )
         
         # Handle different response formats

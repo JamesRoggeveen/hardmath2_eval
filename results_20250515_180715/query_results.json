@@ -1,0 +1,23 @@
+[
+  {
+    "prompt_idx": 0,
+    "query_idx": 0,
+    "model_name": "Claude 3.7 Sonnet",
+    "response": "Error querying Claude 3.7 Sonnet: 'ThinkingBlock' object has no attribute 'text'",
+    "error": true
+  },
+  {
+    "prompt_idx": 1,
+    "query_idx": 0,
+    "model_name": "Claude 3.7 Sonnet",
+    "response": "Error querying Claude 3.7 Sonnet: 'ThinkingBlock' object has no attribute 'text'",
+    "error": true
+  },
+  {
+    "prompt_idx": 2,
+    "query_idx": 0,
+    "model_name": "Claude 3.7 Sonnet",
+    "response": "Error querying Claude 3.7 Sonnet: 'ThinkingBlock' object has no attribute 'text'",
+    "error": true
+  }
+]

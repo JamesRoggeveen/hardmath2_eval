@@ -1,0 +1,19 @@
+Grading rubric for boundary layer problems (5 points)
+
+1. Recognition of Boundary Layer Structure
+- 1 point: Explicitly states that boundary layer analysis is needed due to a small parameter multiplying the highest derivative or a rapid solution change near a boundary, and names the parameter.
+- 0 points: Does not state that boundary layer analysis is required, does not identify a small parameter, or gives an otherwise incorrect reason.
+
+2. Identification of Boundary Layer Location
+- 1 point: Explicitly identifies the correct boundary (e.g., $x=0$ or $x=1$) where the boundary layer occurs, and justifies this location.
+- 0 points: Does not identify a boundary layer location, selects the wrong location, or does not justify the choice.
+
+3. Scaling and Inner Variable (1 point)
+- 1 point: Writes down the correct inner variable (e.g., $\xi = x/\epsilon$), substitutes it into the equation, and obtains the correctly rescaled inner equation.
+- 0 points: Student does not define the correct inner variable, does not substitute correctly, or otherwise does not derive the correct inner equation.
+
+4. Outer and Inner Solutions (1 point)
+- 1 point: Writes the correct general outer solution (with small parameter set to zero) and the correct general inner solution (to the rescaled equation), including arbitrary constants.
+- 0 points: Omits the general form of either solution, does not include arbitrary constants, or writes an otherwise incorrect solution.
+
+5. Matching and Composite Solution (1 point)

@@ -1,0 +1,3761 @@
+{
+    "models": [
+        "DeepSeek V3",
+        "Llama 4 Maverick"
+    ],
+    "question_types": [
+        "asympytotic_series",
+        "boundary_layers",
+        "integrals",
+        "nonlinear_ode",
+        "nonlinear_pde",
+        "other",
+        "wkb"
+    ],
+    "dataset_distribution": {
+        "total_problems": 201,
+        "problem_type_counts": {
+            "asympytotic_series": 5,
+            "boundary_layers": 79,
+            "integrals": 14,
+            "nonlinear_ode": 7,
+            "nonlinear_pde": 63,
+            "other": 6,
+            "wkb": 27
+        },
+        "problem_type_percentages": {
+            "asympytotic_series": 2.4875621890547266,
+            "boundary_layers": 39.30348258706468,
+            "integrals": 6.965174129353234,
+            "nonlinear_ode": 3.482587064676617,
+            "nonlinear_pde": 31.343283582089555,
+            "other": 2.9850746268656714,
+            "wkb": 13.432835820895523
+        }
+    },
+    "prompt_success_rates": {
+        "DeepSeek V3": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0,
+            "4": 0.0,
+            "5": 0.0,
+            "6": 0.0,
+            "7": 0.0,
+            "8": 0.0,
+            "9": 100.0,
+            "11": 100.0,
+            "13": 0.0,
+            "14": 0.0,
+            "15": 0.0,
+            "16": 0.0,
+            "17": 0.0,
+            "18": 0.0,
+            "20": 0.0,
+            "22": 0.0,
+            "23": 0.0,
+            "25": 100.0,
+            "26": 0.0,
+            "27": 0.0,
+            "28": 0.0,
+            "29": 0.0,
+            "30": 0.0,
+            "31": 0.0,
+            "32": 0.0,
+            "33": 0.0,
+            "34": 100.0,
+            "35": 0.0,
+            "37": 0.0,
+            "38": 100.0,
+            "39": 0.0,
+            "40": 100.0,
+            "41": 0.0,
+            "42": 0.0,
+            "43": 0.0,
+            "45": 0.0,
+            "47": 0.0,
+            "48": 100.0,
+            "49": 0.0,
+            "50": 0.0,
+            "51": 100.0,
+            "52": 100.0,
+            "53": 0.0,
+            "54": 100.0,
+            "55": 0.0,
+            "57": 0.0,
+            "58": 100.0,
+            "59": 0.0,
+            "60": 0.0,
+            "61": 0.0,
+            "62": 0.0,
+            "64": 100.0,
+            "65": 100.0,
+            "68": 0.0,
+            "69": 0.0,
+            "70": 0.0,
+            "71": 0.0,
+            "72": 100.0,
+            "74": 0.0,
+            "75": 100.0,
+            "76": 0.0,
+            "77": 0.0,
+            "78": 0.0,
+            "79": 0.0,
+            "80": 0.0,
+            "81": 0.0,
+            "82": 0.0,
+            "83": 0.0,
+            "84": 0.0,
+            "85": 0.0,
+            "86": 0.0,
+            "87": 100.0,
+            "88": 0.0,
+            "89": 0.0,
+            "91": 100.0,
+            "92": 100.0,
+            "93": 0.0,
+            "94": 100.0,
+            "95": 0.0,
+            "96": 100.0,
+            "97": 0.0,
+            "98": 0.0,
+            "99": 0.0,
+            "100": 0.0,
+            "101": 100.0,
+            "102": 0.0,
+            "103": 100.0,
+            "104": 0.0,
+            "105": 100.0,
+            "106": 100.0,
+            "107": 0.0,
+            "108": 100.0,
+            "109": 0.0,
+            "110": 0.0,
+            "114": 100.0,
+            "115": 0.0,
+            "117": 100.0,
+            "118": 0.0,
+            "120": 0.0,
+            "121": 0.0,
+            "122": 0.0,
+            "123": 0.0,
+            "124": 0.0,
+            "127": 0.0,
+            "129": 0.0,
+            "131": 0.0,
+            "132": 0.0,
+            "133": 0.0,
+            "135": 0.0,
+            "139": 0.0,
+            "140": 0.0,
+            "141": 0.0,
+            "142": 0.0,
+            "143": 0.0,
+            "144": 0.0,
+            "145": 0.0,
+            "146": 0.0,
+            "147": 0.0,
+            "148": 0.0,
+            "149": 0.0,
+            "150": 0.0,
+            "155": 0.0,
+            "156": 0.0,
+            "157": 0.0,
+            "158": 100.0,
+            "159": 0.0,
+            "160": 0.0,
+            "162": 0.0,
+            "163": 0.0,
+            "164": 0.0,
+            "165": 0.0,
+            "169": 0.0,
+            "170": 0.0,
+            "171": 0.0,
+            "172": 0.0,
+            "174": 0.0,
+            "176": 0.0,
+            "177": 0.0,
+            "178": 0.0,
+            "179": 0.0,
+            "180": 0.0,
+            "181": 0.0,
+            "182": 0.0,
+            "183": 0.0,
+            "184": 0.0,
+            "185": 0.0,
+            "186": 0.0,
+            "188": 0.0,
+            "189": 0.0,
+            "190": 0.0,
+            "191": 0.0,
+            "192": 0.0,
+            "193": 0.0,
+            "196": 0.0,
+            "197": 0.0,
+            "198": 0.0,
+            "199": 0.0,
+            "200": 0.0,
+            "202": 0.0,
+            "203": 0.0,
+            "206": 100.0,
+            "207": 100.0,
+            "208": 100.0,
+            "210": 0.0,
+            "211": 100.0,
+            "212": 0.0,
+            "213": 0.0
+        },
+        "Llama 4 Maverick": {
+            "2": 0.0,
+            "3": 0.0,
+            "4": 0.0,
+            "6": 0.0,
+            "7": 0.0,
+            "8": 0.0,
+            "9": 0.0,
+            "11": 0.0,
+            "13": 0.0,
+            "15": 100.0,
+            "16": 0.0,
+            "17": 0.0,
+            "18": 0.0,
+            "19": 0.0,
+            "20": 0.0,
+            "21": 100.0,
+            "22": 0.0,
+            "23": 0.0,
+            "24": 0.0,
+            "25": 0.0,
+            "26": 0.0,
+            "27": 0.0,
+            "28": 0.0,
+            "29": 0.0,
+            "30": 0.0,
+            "31": 0.0,
+            "33": 0.0,
+            "34": 0.0,
+            "35": 100.0,
+            "36": 0.0,
+            "37": 0.0,
+            "38": 0.0,
+            "39": 0.0,
+            "41": 0.0,
+            "42": 0.0,
+            "43": 0.0,
+            "44": 0.0,
+            "45": 100.0,
+            "46": 0.0,
+            "48": 100.0,
+            "49": 0.0,
+            "50": 0.0,
+            "51": 100.0,
+            "52": 0.0,
+            "53": 0.0,
+            "54": 100.0,
+            "55": 0.0,
+            "57": 0.0,
+            "59": 100.0,
+            "60": 0.0,
+            "61": 0.0,
+            "62": 0.0,
+            "64": 100.0,
+            "65": 0.0,
+            "67": 0.0,
+            "68": 0.0,
+            "69": 0.0,
+            "70": 0.0,
+            "72": 0.0,
+            "73": 0.0,
+            "74": 0.0,
+            "75": 0.0,
+            "76": 100.0,
+            "78": 0.0,
+            "80": 0.0,
+            "81": 100.0,
+            "82": 0.0,
+            "83": 0.0,
+            "84": 0.0,
+            "85": 0.0,
+            "86": 0.0,
+            "87": 100.0,
+            "88": 100.0,
+            "89": 0.0,
+            "90": 0.0,
+            "91": 100.0,
+            "92": 100.0,
+            "93": 100.0,
+            "94": 100.0,
+            "95": 100.0,
+            "96": 100.0,
+            "97": 100.0,
+            "98": 100.0,
+            "100": 0.0,
+            "101": 100.0,
+            "102": 0.0,
+            "103": 100.0,
+            "104": 0.0,
+            "105": 100.0,
+            "106": 0.0,
+            "107": 0.0,
+            "108": 100.0,
+            "109": 0.0,
+            "110": 0.0,
+            "111": 0.0,
+            "112": 0.0,
+            "113": 100.0,
+            "114": 0.0,
+            "115": 0.0,
+            "117": 0.0,
+            "119": 0.0,
+            "120": 0.0,
+            "121": 0.0,
+            "122": 0.0,
+            "123": 0.0,
+            "124": 0.0,
+            "125": 0.0,
+            "126": 0.0,
+            "127": 0.0,
+            "128": 0.0,
+            "129": 0.0,
+            "130": 0.0,
+            "131": 0.0,
+            "132": 0.0,
+            "133": 0.0,
+            "134": 0.0,
+            "135": 0.0,
+            "136": 0.0,
+            "137": 0.0,
+            "139": 0.0,
+            "140": 0.0,
+            "141": 0.0,
+            "142": 0.0,
+            "143": 0.0,
+            "144": 0.0,
+            "145": 0.0,
+            "146": 0.0,
+            "147": 0.0,
+            "148": 0.0,
+            "149": 0.0,
+            "150": 0.0,
+            "151": 0.0,
+            "152": 0.0,
+            "153": 0.0,
+            "154": 0.0,
+            "156": 0.0,
+            "157": 0.0,
+            "158": 100.0,
+            "159": 0.0,
+            "160": 0.0,
+            "162": 0.0,
+            "163": 0.0,
+            "164": 0.0,
+            "165": 0.0,
+            "166": 0.0,
+            "169": 0.0,
+            "170": 0.0,
+            "171": 0.0,
+            "172": 0.0,
+            "173": 0.0,
+            "174": 0.0,
+            "175": 0.0,
+            "177": 0.0,
+            "178": 0.0,
+            "179": 0.0,
+            "180": 100.0,
+            "181": 0.0,
+            "182": 0.0,
+            "183": 0.0,
+            "184": 0.0,
+            "185": 100.0,
+            "186": 0.0,
+            "188": 0.0,
+            "189": 0.0,
+            "190": 0.0,
+            "191": 0.0,
+            "192": 0.0,
+            "193": 0.0,
+            "194": 0.0,
+            "196": 0.0,
+            "197": 0.0,
+            "198": 0.0,
+            "199": 0.0,
+            "200": 0.0,
+            "201": 0.0,
+            "202": 0.0,
+            "204": 0.0,
+            "206": 100.0,
+            "207": 0.0,
+            "208": 100.0,
+            "209": 0.0,
+            "210": 0.0,
+            "211": 0.0,
+            "212": 0.0,
+            "213": 0.0,
+            "214": 0.0
+        }
+    },
+    "model_eval_stats": {
+        "DeepSeek V3": {
+            "total_queries": 169,
+            "total_eval_success": 169,
+            "eval_success_rate": 100.0
+        },
+        "Llama 4 Maverick": {
+            "total_queries": 186,
+            "total_eval_success": 186,
+            "eval_success_rate": 100.0
+        }
+    },
+    "DeepSeek V3": {
+        "total_prompts": 169,
+        "total_queries": 169,
+        "total_successful_queries": 32,
+        "overall_success_rate": 18.93491124260355,
+        "overall_pass_at_1_rate": 18.93491124260355,
+        "overall_pass_at_n_rate": 18.93491124260355,
+        "prompt_breakdown": {
+            "prompt_1": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_2": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_3": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_4": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_5": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_6": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_7": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_8": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_9": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_11": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_13": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_14": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_15": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_16": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_17": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_18": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_19": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_20": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_21": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_22": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_23": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_24": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_25": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_26": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_27": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_28": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_29": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_30": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_31": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_32": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_33": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_34": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_35": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_36": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_37": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_38": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_39": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_40": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_41": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_42": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_43": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_44": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_45": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_46": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_47": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_48": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_49": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_50": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_51": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_52": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_53": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_54": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_55": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_57": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_58": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_59": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_60": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_61": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_62": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_64": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_65": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_67": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_68": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_69": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_70": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_71": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_72": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_73": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_74": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_75": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_76": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_77": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_78": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_79": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_80": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_81": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_82": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_83": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_84": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_85": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_86": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_87": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_88": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_89": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_90": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_91": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_92": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_93": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_94": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_95": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_96": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_97": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_98": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_99": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_100": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_101": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_102": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_103": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_104": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_105": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_106": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_107": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_108": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_109": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_110": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_111": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_112": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_113": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_114": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_115": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_117": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_118": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_119": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_120": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_121": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_122": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_123": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_124": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_125": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_126": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_127": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_128": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_129": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_130": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_131": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_132": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_133": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_134": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_135": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_136": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_137": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_139": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_140": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_141": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_142": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_143": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_144": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_145": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_146": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_147": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_148": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_149": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_150": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_151": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_152": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_153": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_154": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_155": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_156": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_157": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_158": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_159": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_160": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_162": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_163": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_164": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_165": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_166": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_169": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_170": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_171": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_172": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_173": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_174": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_175": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_176": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_177": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_178": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_179": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_180": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_181": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_182": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_183": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_184": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_185": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_186": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_188": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_189": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_190": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_191": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_192": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_193": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_194": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_196": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_197": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_198": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_199": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_200": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_201": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_202": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_203": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_204": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_206": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_207": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_208": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_209": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_210": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_211": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_212": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_213": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_214": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            }
+        },
+        "question_type_breakdown": {
+            "asympytotic_series": {
+                "total_queries": 5,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "total_prompts": 5,
+                "pass_at_1_rate": 0.0,
+                "pass_at_n_rate": 0.0
+            },
+            "boundary_layers": {
+                "total_queries": 71,
+                "successful_queries": 16,
+                "success_rate": 22.535211267605636,
+                "total_prompts": 71,
+                "pass_at_1_rate": 22.535211267605636,
+                "pass_at_n_rate": 22.535211267605636
+            },
+            "integrals": {
+                "total_queries": 13,
+                "successful_queries": 6,
+                "success_rate": 46.15384615384615,
+                "total_prompts": 13,
+                "pass_at_1_rate": 46.15384615384615,
+                "pass_at_n_rate": 46.15384615384615
+            },
+            "nonlinear_ode": {
+                "total_queries": 7,
+                "successful_queries": 3,
+                "success_rate": 42.857142857142854,
+                "total_prompts": 7,
+                "pass_at_1_rate": 42.857142857142854,
+                "pass_at_n_rate": 42.857142857142854
+            },
+            "nonlinear_pde": {
+                "total_queries": 45,
+                "successful_queries": 3,
+                "success_rate": 6.666666666666667,
+                "total_prompts": 45,
+                "pass_at_1_rate": 6.666666666666667,
+                "pass_at_n_rate": 6.666666666666667
+            },
+            "other": {
+                "total_queries": 6,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "total_prompts": 6,
+                "pass_at_1_rate": 0.0,
+                "pass_at_n_rate": 0.0
+            },
+            "wkb": {
+                "total_queries": 22,
+                "successful_queries": 4,
+                "success_rate": 18.181818181818183,
+                "total_prompts": 22,
+                "pass_at_1_rate": 18.181818181818183,
+                "pass_at_n_rate": 18.181818181818183
+            }
+        }
+    },
+    "Llama 4 Maverick": {
+        "total_prompts": 186,
+        "total_queries": 186,
+        "total_successful_queries": 31,
+        "overall_success_rate": 16.666666666666664,
+        "overall_pass_at_1_rate": 16.666666666666664,
+        "overall_pass_at_n_rate": 16.666666666666664,
+        "prompt_breakdown": {
+            "prompt_1": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_2": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_3": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_4": {
+                "problem_type": "asympytotic_series",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_5": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_6": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_7": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_8": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_9": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_11": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_13": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_14": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_15": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_16": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_17": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_18": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_19": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_20": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_21": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_22": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_23": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_24": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_25": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_26": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_27": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_28": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_29": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_30": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_31": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_32": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_33": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_34": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_35": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_36": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_37": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_38": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_39": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_40": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_41": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_42": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_43": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_44": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_45": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_46": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_47": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_48": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_49": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_50": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_51": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_52": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_53": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_54": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_55": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_57": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_58": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_59": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_60": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_61": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_62": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_64": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_65": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_67": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_68": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_69": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_70": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_71": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_72": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_73": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_74": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_75": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_76": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_77": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_78": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_79": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_80": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_81": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_82": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_83": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_84": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_85": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_86": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_87": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_88": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_89": {
+                "problem_type": "boundary_layers",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_90": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_91": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_92": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_93": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_94": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_95": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_96": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_97": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_98": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_99": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_100": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_101": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_102": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_103": {
+                "problem_type": "integrals",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_104": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_105": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_106": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_107": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_108": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_109": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_110": {
+                "problem_type": "nonlinear_ode",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_111": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_112": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_113": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_114": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_115": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_117": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_118": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_119": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_120": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_121": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_122": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_123": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_124": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_125": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_126": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_127": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_128": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_129": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_130": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_131": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_132": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_133": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_134": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_135": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_136": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_137": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_139": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_140": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_141": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_142": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_143": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_144": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_145": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_146": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_147": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_148": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_149": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_150": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_151": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_152": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_153": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_154": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_155": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_156": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_157": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_158": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_159": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_160": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_162": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_163": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_164": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_165": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_166": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_169": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_170": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_171": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_172": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_173": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_174": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_175": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_176": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_177": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_178": {
+                "problem_type": "nonlinear_pde",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_179": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_180": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_181": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_182": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_183": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_184": {
+                "problem_type": "other",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_185": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_186": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_188": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_189": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_190": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_191": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_192": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_193": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_194": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_196": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_197": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_198": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_199": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_200": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_201": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_202": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_203": {
+                "problem_type": "Unknown",
+                "total_queries": 0,
+                "successful_queries": 0,
+                "success_rate": 0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_204": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_206": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_207": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_208": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 1,
+                "success_rate": 100.0,
+                "pass_at_1": true,
+                "pass_at_n": true
+            },
+            "prompt_209": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_210": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_211": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_212": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_213": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            },
+            "prompt_214": {
+                "problem_type": "wkb",
+                "total_queries": 1,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "pass_at_1": false,
+                "pass_at_n": false
+            }
+        },
+        "question_type_breakdown": {
+            "asympytotic_series": {
+                "total_queries": 3,
+                "successful_queries": 0,
+                "success_rate": 0.0,
+                "total_prompts": 3,
+                "pass_at_1_rate": 0.0,
+                "pass_at_n_rate": 0.0
+            },
+            "boundary_layers": {
+                "total_queries": 71,
+                "successful_queries": 13,
+                "success_rate": 18.30985915492958,
+                "total_prompts": 71,
+                "pass_at_1_rate": 18.30985915492958,
+                "pass_at_n_rate": 18.30985915492958
+            },
+            "integrals": {
+                "total_queries": 13,
+                "successful_queries": 10,
+                "success_rate": 76.92307692307693,
+                "total_prompts": 13,
+                "pass_at_1_rate": 76.92307692307693,
+                "pass_at_n_rate": 76.92307692307693
+            },
+            "nonlinear_ode": {
+                "total_queries": 7,
+                "successful_queries": 2,
+                "success_rate": 28.57142857142857,
+                "total_prompts": 7,
+                "pass_at_1_rate": 28.57142857142857,
+                "pass_at_n_rate": 28.57142857142857
+            },
+            "nonlinear_pde": {
+                "total_queries": 60,
+                "successful_queries": 2,
+                "success_rate": 3.3333333333333335,
+                "total_prompts": 60,
+                "pass_at_1_rate": 3.3333333333333335,
+                "pass_at_n_rate": 3.3333333333333335
+            },
+            "other": {
+                "total_queries": 6,
+                "successful_queries": 1,
+                "success_rate": 16.666666666666664,
+                "total_prompts": 6,
+                "pass_at_1_rate": 16.666666666666664,
+                "pass_at_n_rate": 16.666666666666664
+            },
+            "wkb": {
+                "total_queries": 26,
+                "successful_queries": 3,
+                "success_rate": 11.538461538461538,
+                "total_prompts": 26,
+                "pass_at_1_rate": 11.538461538461538,
+                "pass_at_n_rate": 11.538461538461538
+            }
+        }
+    }
+}
