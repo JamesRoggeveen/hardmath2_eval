@@ -261,8 +261,10 @@ def evaluate_with_llm_judge(model_response: str,
         score_val = verdict["score"]
         explanation = verdict["explanation"]
 
-        res.score = float(score_val)
-        res.is_equivalent = res.score > 0  # simplistic: non-zero score counts as equivalent
+        # Convert raw 0–5 rubric score to 0–1 scale (steps of 0.2)
+        res.score = round(float(score_val) / 5.0, 3)
+        # Mark equivalent as any non-zero score (you can tighten later)
+        res.is_equivalent = res.score > 0.0
         res.success = True  # mark overall process ok
         res.judge_reasoning = explanation
         return res

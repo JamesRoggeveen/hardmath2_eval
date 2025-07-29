@@ -14,6 +14,7 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     RUBRIC_MAP = {
         "boundary_layers": "rubrics/boundary_rubric.txt",
         "wkb": "rubrics/wkb_rubric.txt",
+        "nonlinear_pde": "rubrics/nonlinear_pdes_rubric.txt"
     }
 
     # Process each result
@@ -116,7 +117,7 @@ if __name__ == "__main__":
         help="Directory containing query_results.json and where outputs will be saved"
     )
     parser.add_argument("--use-llm-judge", action="store_true", help="Use LLM-as-a-judge rubric scoring instead of numeric/symbolic evaluator")
-    parser.add_argument("--problem-type", type=str, default=None, help="Filter to this problem type before evaluation")
+    parser.add_argument("--problem-type", nargs="*", default=None, help="Filter to these problem types before evaluation")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of evaluations after filtering")
     args = parser.parse_args()
     results_dir = args.results_dir
@@ -150,8 +151,10 @@ if __name__ == "__main__":
 
     # Optional filtering by problem type
     if args.problem_type:
-        print(f"Filtering to problem type '{args.problem_type}'", flush=True)
-        mask = [t == args.problem_type for t in type_list]
+        types_str = ", ".join(args.problem_type)
+        print(f"Filtering to problem types: {types_str}", flush=True)
+        allowed = set(args.problem_type)
+        mask = [t in allowed for t in type_list]
         if not any(mask):
             print("No entries with that problem type – exiting.")
             exit(0)

@@ -120,6 +120,7 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     RUBRIC_MAP = {
         "boundary_layers": "rubrics/boundary_rubric.txt",
         "wkb": "rubrics/wkb_rubric.txt",
+        "nonlinear_pde": "rubrics/nonlinear_pdes_rubric.txt"
     }
 
     for response, prompt_idx, model_name, error, query_idx in query_results:
@@ -197,7 +198,7 @@ def main():
     parser.add_argument("--no-save", action="store_true", help="Do not save results, print them to the console instead.")
     parser.add_argument("--use-llm-judge", action="store_true", help="Use LLM-as-a-judge rubric based grading instead of numeric/symbolic evaluator.")
     parser.add_argument("--models", nargs="*", default=None, help="Override model list (e.g. --models 'Gemini 2.5 Flash')")
-    parser.add_argument("--problem-type", type=str, default=None, help="Filter dataset to only this problem type (matches the 'type' field in the dataset)")
+    parser.add_argument("--problem-type", nargs="*", default=None, help="Filter dataset to these problem types (e.g. --problem-type boundary_layers wkb)")
     args = parser.parse_args()
     
     # Load and validate configuration
@@ -249,18 +250,24 @@ def main():
     
     # Optional filtering by problem type
     if args.problem_type:
-        print(f"Filtering dataset to problem type '{args.problem_type}'", flush=True)
+        types_str = ", ".join(args.problem_type)
+        print(f"Filtering dataset to problem types: {types_str}", flush=True)
+        allowed = set(args.problem_type)
         filtered = [
             (p, s, par, t, idx)
-            for p, s, par, t, idx in zip(
-                prompt_list, solution_list, parameter_list, type_list, index_list
-            )
-            if t == args.problem_type
+            for p, s, par, t, idx in zip(prompt_list, solution_list, parameter_list, type_list, index_list)
+            if t in allowed
         ]
         if not filtered:
-            print(f"No problems found with type '{args.problem_type}'. Exiting.")
+            print("No problems found with specified problem types. Exiting.")
             return
         prompt_list, solution_list, parameter_list, type_list, index_list = map(list, zip(*filtered))
+
+    # Diagnostic summary of remaining prompt types
+    from collections import Counter
+    type_counts = Counter(type_list)
+    summary = ", ".join(f"{t}:{c}" for t, c in type_counts.items())
+    print(f"Prompts kept after filtering: {len(prompt_list)} (by type → {summary})", flush=True)
 
     # Limit the number of prompts if requested (after filtering)
     if args.limit > 0:
