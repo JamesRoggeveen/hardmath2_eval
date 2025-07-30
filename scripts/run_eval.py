@@ -120,7 +120,7 @@ def process_results(query_results, prompt_list, solution_list, parameter_list, t
     RUBRIC_MAP = {
         "boundary_layers": "rubrics/boundary_rubric.txt",
         "wkb": "rubrics/wkb_rubric.txt",
-        "nonlinear_pde": "rubrics/nonlinear_pdes_rubric.txt"
+        "nonlinear_pde": "rubrics/nonlinear_pde_rubric.txt"
     }
 
     for response, prompt_idx, model_name, error, query_idx in query_results:

@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{geometry}
+\usepackage{graphicx}
+\geometry{margin=1in}
+\begin{document}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Model} & \multicolumn{2}{c|}{\textbf{Overall}} & \multicolumn{2}{c|}{\textbf{Boundary Layers}} & \multicolumn{2}{c|}{\textbf{Nonlinear Pde}} & \multicolumn{2}{c|}{\textbf{Wkb}} \\
+\cline{2-9}
+  & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} & \textbf{Rate} & \textbf{Count} \\
+\hline
+DeepSeek V3 & 64.3 & 182 & 67.9 & 84 & 63.2 & 68 & 56.7 & 30 \\
+\hline
+o4-mini & 76.9 & 182 & 84.5 & 84 & 67.6 & 68 & 76.7 & 30 \\
+\hline
+Gemini 2.5 Flash Thinking & 83.0 & 182 & 91.7 & 84 & 75.0 & 68 & 76.7 & 30 \\
+\hline
+\end{tabular}
+}
+\caption{Pass@1 Rates and Problem Counts by Model and Question Type}
+\end{table}
+\end{document}

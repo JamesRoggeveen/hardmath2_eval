@@ -3,7 +3,7 @@
     {
         "Gemini 2.0 Flash Thinking": "gemini-2.0-flash-thinking-exp",
         "Gemini 2.0 Flash": "gemini-2.0-flash",
-        "Gemini 2.5 Flash Thinking": "gemini-2.5-pro-exp-03-25",
+        "Gemini 2.5 Flash Thinking": "gemini-2.5-flash",
         "Gemini 2.5 Pro Preview": "gemini-2.5-pro-preview-05-06"
     },    
     "SUPPORTED_MODELS_OPENAI":
@@ -34,5 +34,5 @@
         "DeepSeek V3": "deepseek-ai/DeepSeek-V3",
         "Llama 4 Maverick": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
     },
-    "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables. Do not include any other text besides the single solution in the $\\boxed{}$ environment, including information about the limits of variables or any Big O notation."
+    "SYSTEM_INSTRUCTION": "Include any solutions within a single $\\boxed{}$ LaTeX environment. If there are multiple solutions, separate them with a semicolon within the same $\\boxed{}$ environment. A solution should consist of a single expression and you should not define any helper functions or variables. Show your steps, but include only the final solution in the $\\boxed{}$ environment."
 }

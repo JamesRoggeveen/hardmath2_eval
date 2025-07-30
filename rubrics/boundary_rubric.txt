@@ -17,3 +17,7 @@ Grading rubric for boundary layer problems (5 points)
 - 0 points: Omits the general form of either solution, does not include arbitrary constants, or writes an otherwise incorrect solution.
 
 5. Matching and Composite Solution (1 point)
+- 1 point: Matches inner and outer solutions in the overlap region, determines all constants, and writes the correct uniformly valid composite solution (e.g., $y_{\text{comp}}(x) = y_{\text{outer}}(x) + y_{\text{inner}}(x) - y_{\text{overlap}}(x)$).
+- 0 points: Does not expand and match solutions, does not determine constants, or otherwise does not write the correct composite solution.
+
+Note: you should only award a 5/5 if the model's final solution EXACTLY matches the ground-truth solution.

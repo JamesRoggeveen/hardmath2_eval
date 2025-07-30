@@ -19,3 +19,5 @@ Grading rubric for nonlinear PDE problems (5 points)
 5. Interpretation and Asymptotic/Physical Behavior
 - 1 point: Correctly interprets the solution in terms of the original variables (e.g., describes soliton or blow-up, gives the asymptotic or qualitative behavior), and addresses any conditions or parameter regimes relevant to the original nonlinear PDE.
 - 0 points: Fails to interpret, gives an incorrect physical/asymptotic description, or otherwise does not address the original nonlinear PDE's physical meaning.
+
+Note: you should only award a 5/5 if the model's final solution EXACTLY matches the ground-truth solution.

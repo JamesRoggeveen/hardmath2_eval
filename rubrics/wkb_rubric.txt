@@ -19,3 +19,5 @@ Grading rubric for WKB problems (5 points)
 5. Solution for Leading Order and Interpretation
 - 1 points: Correctly solves the leading order equation for $S(x)$, writes the leading order solution for $y(x)$, and interprets/expresses the result in the correct form, including proper handling of constants or boundary conditions if needed.
 - 0 points: Solution is missing, misinterpreted, or otherwise incorrect.
+
+Note: you should only award a 5/5 if the model's final solution EXACTLY matches the ground-truth solution.
