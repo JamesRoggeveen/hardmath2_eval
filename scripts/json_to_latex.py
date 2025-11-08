@@ -15,7 +15,7 @@ def main():
     target_dir = os.path.join(parent_dir, folder_name)
 
     json_path = os.path.join(target_dir, "full_results.json")
-    tex_path = os.path.join(target_dir, "nonlinear_pdes.tex")
+    tex_path = os.path.join(target_dir, "all_problems.tex")
 
     # Load JSON
     try:
@@ -26,7 +26,9 @@ def main():
         sys.exit(1)
 
     # Filter for nonlinear PDEs
-    nonlinear_pdes = [entry for entry in data if entry.get("type") == "nonlinear_pde"]
+    # nonlinear_pdes = [entry for entry in data if entry.get("type") == "nonlinear_pde"]
+    all_problems = data
+
 
     # Start LaTeX doc
     latex = [
@@ -34,12 +36,12 @@ def main():
         r"\usepackage{amsmath}",
         r"\usepackage{geometry}",
         r"\geometry{margin=1in}",
-        r"\title{Nonlinear PDE Results}",
+        r"\title{All Results}",
         r"\begin{document}",
         r"\maketitle"
     ]
 
-    for i, entry in enumerate(nonlinear_pdes, 1):
+    for i, entry in enumerate(all_problems, 1):
         prompt = entry.get("prompt", "").replace("\n", "\n\n")
         model_response = entry.get("model_response", "").replace("\n", "\n\n")
         model_name = entry["model_name"]
@@ -75,11 +77,11 @@ def main():
             r"\begin{quote}",
             prompt,
             r"\end{quote}",
-            r"\textbf{Model Solution:}",
-            r"\begin{quote}",
-            model_response,
-            r"\end{quote}",
-            rf"\textbf{{Boxed Expression:}} ${boxed_latex}$",
+            # r"\textbf{Model Solution:}",
+            # r"\begin{quote}",
+            # model_response,
+            # r"\end{quote}",
+            rf"\textbf{{Model Boxed Expression:}} ${boxed_latex}$",
             "",
             r"\textbf{True Solution:}",
             r"\begin{quote}",

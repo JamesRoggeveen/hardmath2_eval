@@ -9,12 +9,35 @@ import re
 from collections import defaultdict
 
 def generate_summary(results_dir):
-    # Define input and output file paths
-    results_file = os.path.join(results_dir, 'results.json')
+    # Detect which results file to use
+    results_path_pass = os.path.join(results_dir, 'results.json')
+    results_path_llm  = os.path.join(results_dir, 'results_llm.json')
+    metric_mode = 'pass'  # default – classic is_equivalent metric
+    if os.path.exists(results_path_pass):
+        results_file = results_path_pass
+    elif os.path.exists(results_path_llm):
+        results_file = results_path_llm
+        metric_mode = 'llm'  # rubric scores between 0-1
+    else:
+        raise FileNotFoundError(f"Neither results.json nor results_llm.json found in {results_dir}")
+
     summary_file = os.path.join(results_dir, 'summary.json')
     
     with open(results_file, 'r') as f:
         results = json.load(f)
+
+    # If we are in LLM-judge mode, fabricate a boolean pass flag so that the
+    # downstream logic that references `is_equivalent` does not blow up.  We
+    # still preserve the original numeric score for later averaging.
+    if metric_mode == 'llm':
+        SCORE_PASS_THRESHOLD = 0.5  # feel free to adjust per-rubric
+        for row in results:
+            # Inject a synthetic binary flag if missing
+            raw_score = row.get('score', 0)
+            if raw_score is None:
+                raw_score = 0.0  # treat missing score as zero
+            row['score'] = raw_score  # normalise value
+            row['is_equivalent'] = raw_score >= SCORE_PASS_THRESHOLD
 
     # Group results by model name and prompt_idx
     results_by_model = defaultdict(lambda: defaultdict(list))
@@ -95,6 +118,14 @@ def generate_summary(results_dir):
             for queries in prompt_results.values()
         )
         
+        # When using LLM-judge scores we also need to accumulate the raw
+        # numeric values so we can report averages.
+        if metric_mode == 'llm':
+            total_score_sum = sum(
+                sum(query.get('score', 0) for query in queries)
+                for queries in prompt_results.values()
+            )
+
         # Calculate success rate for each prompt
         prompt_stats = {}
         for prompt_idx in all_prompt_indices:  # Use all prompt indices
@@ -109,6 +140,10 @@ def generate_summary(results_dir):
                 # Calculate pass@1 (using only first query)
                 pass_at_1 = queries[0]['is_equivalent'] if queries else False
                 
+                # Calculate mean rubric score for this prompt (LLM mode)
+                if metric_mode == 'llm':
+                    mean_score = sum(q.get('score', 0) for q in queries) / len(queries)
+                
                 # Calculate pass@n (all queries must be equivalent)
                 pass_at_n = all(query['is_equivalent'] for query in queries)
                 
@@ -119,7 +154,8 @@ def generate_summary(results_dir):
                     "successful_queries": successful_queries,
                     "success_rate": (successful_queries/len(queries))*100 if queries else 0,
                     "pass_at_1": pass_at_1,
-                    "pass_at_n": pass_at_n
+                    "pass_at_n": pass_at_n,
+                    **({"mean_score": mean_score} if metric_mode == 'llm' else {})
                 }
             else:
                 # For prompts that this model hasn't run, add an entry with 0 success
@@ -178,25 +214,46 @@ def generate_summary(results_dir):
             pass_at_1_rate = (stats["pass_at_1_prompts"] / stats["total_prompts"]) * 100 if stats["total_prompts"] > 0 else 0
             pass_at_n_rate = (stats["pass_at_n_prompts"] / stats["total_prompts"]) * 100 if stats["total_prompts"] > 0 else 0
             
-            question_type_rates[q_type] = {
-                "total_queries": stats["total"],
-                "successful_queries": stats["successful"],
-                "success_rate": success_rate,
-                "total_prompts": stats["total_prompts"],
-                "pass_at_1_rate": pass_at_1_rate,
-                "pass_at_n_rate": pass_at_n_rate
-            }
+            if metric_mode == 'llm':
+                # Compute mean rubric score for this question type
+                score_values = []
+                for queries in prompt_results.values():
+                    if queries and queries[0]['type'] == q_type:
+                        score_values.extend([q.get('score', 0) for q in queries])
+                mean_type_score = sum(score_values)/len(score_values) if score_values else 0
+                question_type_rates[q_type] = {
+                    "total_queries": stats["total"],
+                    "successful_queries": stats["successful"],
+                    "success_rate": success_rate,
+                    "total_prompts": stats["total_prompts"],
+                    "pass_at_1_rate": pass_at_1_rate,
+                    "pass_at_n_rate": pass_at_n_rate,
+                    "mean_score": mean_type_score
+                }
+            else:
+                question_type_rates[q_type] = {
+                    "total_queries": stats["total"],
+                    "successful_queries": stats["successful"],
+                    "success_rate": success_rate,
+                    "total_prompts": stats["total_prompts"],
+                    "pass_at_1_rate": pass_at_1_rate,
+                    "pass_at_n_rate": pass_at_n_rate
+                }
 
-        summary_stats[model_name] = {
+        # Assemble the per-model summary block
+        model_block = {
             "total_prompts": total_prompts,
             "total_queries": total_queries,
             "total_successful_queries": total_successful_queries,
             "overall_success_rate": (total_successful_queries/total_queries)*100 if total_queries > 0 else 0,
-            "overall_pass_at_1_rate": overall_pass_at_1_rate,
-            "overall_pass_at_n_rate": overall_pass_at_n_rate,
+            "overall_pass_at_1_rate": (total_pass_at_1 / total_prompts) * 100 if total_prompts > 0 else 0,
+            "overall_pass_at_n_rate": (total_pass_at_n / total_prompts) * 100 if total_prompts > 0 else 0,
             "prompt_breakdown": prompt_stats,
             "question_type_breakdown": question_type_rates
         }
+        if metric_mode == 'llm':
+            model_block["overall_mean_score"] = total_score_sum / total_queries if total_queries else 0
+        summary_stats[model_name] = model_block
 
     with open(summary_file, 'w') as f:
         json.dump(summary_stats, f, indent=4)

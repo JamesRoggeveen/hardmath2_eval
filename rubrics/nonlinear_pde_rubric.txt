@@ -1,0 +1,23 @@
+Grading rubric for nonlinear PDE problems (5 points)
+
+1. Recognition of the Role of Nonlinearity
+- 1 point: Explicitly recognizes that the equation is nonlinear and states why the nonlinear term is essential for the solution or asymptotic behavior.
+- 0 points: Does not recognize nonlinearity, does not discuss the nonlinear term, or gives an otherwise incorrect justification.
+
+2. Ansatz or Similarity Variable
+- 1 point: States the correct ansatz, similarity variable, or reduction (e.g., traveling wave substitution $u(x, t) = f(x - ct)$, similarity variable for blow-up, or other appropriate reduction for the nonlinear PDE).
+- 0 points: Does not write a correct ansatz, similarity variable, or reduction, or otherwise makes an incorrect substitution.
+
+3. Substitution and Reduction to ODE
+- 1 point: Correctly substitutes the ansatz or similarity variable into the original PDE and reduces it to the appropriate ODE, including all necessary algebraic steps.
+- 0 points: Does not substitute correctly, does not reduce to the correct ODE, or otherwise makes an error in the reduction.
+
+4. Solution of the Reduced ODE
+- 1 point: Correctly solves the reduced ODE, including all arbitrary constants or relevant parameters, and writes the general or particular solution as required.
+- 0 points: Solution is missing, incorrect, omits constants/parameters, or otherwise does not solve the reduced ODE correctly.
+
+5. Interpretation and Asymptotic/Physical Behavior
+- 1 point: Correctly interprets the solution in terms of the original variables (e.g., describes soliton or blow-up, gives the asymptotic or qualitative behavior), and addresses any conditions or parameter regimes relevant to the original nonlinear PDE.
+- 0 points: Fails to interpret, gives an incorrect physical/asymptotic description, or otherwise does not address the original nonlinear PDE's physical meaning.
+
+Note: you should only award a 5/5 if the model's final solution EXACTLY matches the ground-truth solution.

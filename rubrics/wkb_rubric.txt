@@ -1,0 +1,23 @@
+Grading rubric for WKB problems (5 points)
+
+1. Recognition of WKB applicability
+- 1 point: Clearly recognizes that the equation is suitable for WKB (i.e., contains a small parameter multiplying the highest derivative or rapidly varying solution), and explains why WKB is appropriate (e.g., discusses scales, nature of coefficients, physical context).
+- 0 points: Fails to recognize the need for WKB, uses an inappropriate method, or provides weak justification for why WKB is needed.
+
+2. Correct Statement of the WKB ansatz 
+- 1 point: States the correct WKB ansatz (e.g., $y(x) \sim \exp\left[\frac{1}{\epsilon} S(x)\right]$ or similar), and includes all relevant assumptions (e.g., expansion of $S(x)$, small parameter $\epsilon \)$.
+- 0 points: Ansatz is missing or incorrect.
+
+3. Substitution and Derivation of the WKB Equation
+- 1 point: Correctly substitutes the ansatz into the original equation, carefully computes all derivatives, and systematically derives the WKB equation with all steps shown.
+- 0 points: No meaningful substitution or substitution/derivation is incorrect.
+
+4. Dominant Balance and Leading Order Equation
+- 1 point: Correctly identifies the dominant balance in the WKB equation (e.g., recognizes that the $(S’)^2$ term dominates for small $\epsilon$), writes the leading-order equation, and justifies neglecting smaller terms.
+- 0 points: Fails to identify dominant balance or applies an otherwise incorrect dominant balance.
+
+5. Solution for Leading Order and Interpretation
+- 1 points: Correctly solves the leading order equation for $S(x)$, writes the leading order solution for $y(x)$, and interprets/expresses the result in the correct form, including proper handling of constants or boundary conditions if needed.
+- 0 points: Solution is missing, misinterpreted, or otherwise incorrect.
+
+Note: you should only award a 5/5 if the model's final solution EXACTLY matches the ground-truth solution.
